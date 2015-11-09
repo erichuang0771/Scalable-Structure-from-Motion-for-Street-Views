@@ -1,0 +1,18 @@
+function [ points_color ] = generatePointCloud2view( Cam1, Cam2,M, K1,K2,M1)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+    ims = zeros(size(Cam1,1),size(Cam1,2),2);
+    ims(:,:,1) = Cam1; ims(:,:,2) = Cam2;
+    [ P1,P2 ] = detectSIFT(ims);
+    [ F, P1_inlier, P2_inlier ] = ransacF( P1(:,1:2), P2(:,1:2), max(width,height));
+    E = essentialMatrix( F, K1, K2 );
+    M2 = camera2(E);
+    R = M1(:,1:3);
+    M2R = R*M2(:,1:3);
+    M2T = M2(:,4)+ M1(:,4);
+    
+    
+
+
+end
+
