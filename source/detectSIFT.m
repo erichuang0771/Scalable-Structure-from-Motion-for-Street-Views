@@ -8,7 +8,7 @@ function [ P1,P2 ] = detectSIFT( ims )
     N = size(ims,1);
     f = cell(N,1);
     d = cell(N,1);
-    for i = 1:N
+    for i = 1:2
         I = single(rgb2gray(ims{i}));
         [f{i},d{i}] = vl_sift(I);
     end
