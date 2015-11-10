@@ -16,7 +16,7 @@ function [ F, pts1_inlier, pts2_inlier ] = ransacF( pts1, pts2, M )
 % Number of point correspondances
 N = size(pts1, 1);
 % The threshold to decide inliers
-threshold = 0.001;
+threshold = 0.0001;
 % Max number of inliers
 inlier_num = 0;
 % Randomly choose the initial 7 point pairs
