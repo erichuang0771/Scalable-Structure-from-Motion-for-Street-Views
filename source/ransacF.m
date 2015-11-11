@@ -1,4 +1,4 @@
-function [ F, pts1_inlier, pts2_inlier ] = ransacF( pts1, pts2, M )
+function [ F, pts1_inlier_, pts2_inlier_, index ] = ransacF( pts1, pts2, M )
 % ransacF:
 %   pts1 - Nx2 matrix of (x,y) coordinates
 %   pts2 - Nx2 matrix of (x,y) coordinates
@@ -31,16 +31,15 @@ for i = 1 : 100
         inlier = abs(error) < threshold;
         if sum(inlier) > inlier_num
             inlier_num = sum(inlier);
+            index = find(abs(error) < threshold);
             % F using eightpoint with inliers
             F = eightpoint( pts1(inlier, :), pts2(inlier, :), M );
             pts1_inlier = pts1(inlier, :);
             pts2_inlier = pts2(inlier, :);
         end
-    end
-    pts1_inlier = padarray(pts1_inlier,[0,1],1,'post');
-    pts2_inlier = padarray(pts2_inlier,[0,1],1,'post');
-    
+    end   
 end
-
+     pts1_inlier_ = padarray(pts1_inlier,[0,1],1,'post');
+    pts2_inlier_ = padarray(pts2_inlier,[0,1],1,'post');
 end
 

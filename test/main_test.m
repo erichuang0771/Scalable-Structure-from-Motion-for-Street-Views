@@ -6,10 +6,18 @@ width = size(ims{1},2);
 height = size(ims{1},1);
 
 [ P1,P2 ] = detectSIFT( ims );
-[ F, P1_inlier, P2_inlier ] = ransacF( P1(:,1:2), P2(:,1:2), max(width,height));
+[ F, P1_inlier, P2_inlier, index ] = ransacF( P1(:,1:2), P2(:,1:2), max(width,height));
+save three.mat F P1_inlier P2_inlier index
 %%get intrinsic matrix
 K1 = reshape(paras(1,1:9),3,3)';
+R1 = reshape(paras(1,10:18),3,3)';
+T1 = reshape(paras(1,19:end),3,1);
+
+
 K2 = reshape(paras(2,1:9),3,3)';
+R2 = reshape(paras(2,10:18),3,3)';
+T2 = reshape(paras(2,19:end),3,1);
+
 
 E = essentialMatrix( F, K1, K2 );
 M1 = [eye(3) zeros(3,1)];
@@ -17,13 +25,14 @@ M2 = camera2(E);
 error = zeros(size(M2,3),1);
 P = cell(size(M2,3),1);
 for i=1:size(M2,3)
-   [P{i},error(i),color]= triangulate_color(K1*M1,P1_inlier(:,1:2),K2*M2(:,:,i),P2_inlier(:,1:2), ims{1}, ims{2});
+   [P{i},error(i),color]= triangulate_color(K1*[R1 T1],P1_inlier(:,1:2),K2*[R2 T2],P2_inlier(:,1:2), ims{1}, ims{2});
 end
 [~,ind] = min(error);
 M2_ = M2(:,:,ind);
 
 save_ply('hehe.ply',[P{ind} color]);
-
+a = P{ind};
+save gt a;
 % R1 = reshape(paras(1,10:18),3,3)';
 % R2 = reshape(paras(2,10:18),3,3)';
 % 

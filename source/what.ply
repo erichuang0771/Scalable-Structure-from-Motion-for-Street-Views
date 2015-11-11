@@ -1,0 +1,71 @@
+ply
+format ascii 1.0
+comment PCL generated
+element vertex 37
+property float x
+property float y
+property float z
+property uchar red
+property uchar green
+property uchar blue
+element camera 1
+property float view_px
+property float view_py
+property float view_pz
+property float x_axisx
+property float x_axisy
+property float x_axisz
+property float y_axisx
+property float y_axisy
+property float y_axisz
+property float z_axisx
+property float z_axisy
+property float z_axisz
+property float focal
+property float scalex
+property float scaley
+property float centerx
+property float centery
+property int viewportx
+property int viewporty
+property float k1
+property float k2
+end_header
+-230.07 -294.15 -1.2458 0 0 0
+-365.96 -232.05 -0.91046 0 0 0
+-440.01 -207.75 -0.97477 0 0 0
+-451.25 -204.05 -0.94465 0 0 0
+-463.85 -199.25 -0.94985 0 0 0
+-463.85 -199.25 -0.94985 0 0 0
+-456.02 -202.34 -0.93479 0 0 0
+-531.07 -190.65 -1.0712 0 0 0
+-373.14 -226.73 -0.7522 0 0 0
+-435.82 -209.43 -0.86749 0 0 0
+-442.82 -207.32 -0.87391 0 0 0
+-428.25 -211.61 -0.81709 0 0 0
+-423.04 -211.55 -0.77401 0 0 0
+-445.86 -204.36 -0.8136 0 0 0
+-416.98 -215.67 -0.9199 0 0 0
+-427.14 -212.13 -0.90431 0 0 0
+-417.73 -215.41 -0.87346 0 0 0
+-532.69 -189.56 -1.0924 0 0 0
+-543.19 -185.83 -1.1012 0 0 0
+-457.44 -201.72 -0.89799 0 0 0
+-110.36 -360.49 -0.99076 0 0 0
+-401.44 -221.08 -0.85828 0 0 0
+-431.29 -211.48 -0.84602 0 0 0
+-434.34 -208.43 -0.79458 0 0 0
+-459.95 -198.91 -0.8397 0 0 0
+-454.59 -201.07 -0.82002 0 0 0
+-390.23 -223.11 -0.96038 0 0 0
+-406.57 -218.24 -0.97608 0 0 0
+-502.57 -198.2 -1.0323 0 0 0
+-447.64 -205.68 -0.87458 0 0 0
+-431.37 -211.34 -0.84473 0 0 0
+-392.74 -219.09 -0.76718 0 0 0
+-460.89 -198.9 -0.84221 0 0 0
+-454.34 -200.7 -0.818 0 0 0
+-562.5 -391.61 -1.236 0 0 0
+-195.54 -308.4 -1.3459 0 0 0
+-357.73 -232.08 -0.75011 0 0 0
+0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 37 1 0 0
