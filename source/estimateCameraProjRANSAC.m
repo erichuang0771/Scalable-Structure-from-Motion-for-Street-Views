@@ -11,9 +11,9 @@ threshold = 1000;
 % Max number of inliers
 inlier_num = 0;
 % Randomly choose the initial 7 point pairs
-for i = 1 : 300
+for i = 1 : 500
     random = randi(N, 1, 6);
-    random = [1:6];
+    %random = [1:6];
     % Proj using sevenpoint
     Proj_six = six_points( points3D(random, :), points2D(random, :));
         % The value of reprojection error

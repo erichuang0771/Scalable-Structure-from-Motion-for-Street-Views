@@ -26,12 +26,12 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
     A = -skewsymm(b)*F;
     Proj2 = [A b];
     
-    NUM = size(P1_inlier,1);
+    NUM = size(P1,1);
     
     %% build featureTable
-    featureTable = zeros(size(P1_inlier,1),128+3+3);
+    featureTable = zeros(NUM,128+3+3);
     % assign SIFT decs
-    featureTable(:,1:128) = d1(:,matches(1,inlier_index))';
+    featureTable(:,1:128) = d1(:,matches(1,:))';
     % assign 3D points color need to be done
     % done in triangulation
     
@@ -40,12 +40,13 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
     featureCell = cell(NUM,1);
     for i = 1:NUM
         % replace feature cell with orhinal points
-        featureCell{i} = [P1_inlier(i,1:2)' P2_inlier(i,1:2)'];
+        % all points are matched points
+        featureCell{i} = [P1(i,1:2)' P2(i,1:2)'];
     end
     %done
     
     %% Z table
-    Z = ones(2,size(P1_inlier,1));
+    Z = ones(2,size(P1,1));
     %done
     
     %% camProjTable
@@ -58,8 +59,8 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
     %done
     
     %% triangulartion
-     [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulation( featureTable, camProjTable, featureCell,Z );
-     save test.mat featureTable camProjTable  featureCell Z
+     [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulation( featureTable, camProjTable, featureCell,Z, inlier_index);
+    % save test.mat featureTable camProjTable  featureCell Z
      %save_ply('what.ply',featureTable(:,129:end));
 end
 
