@@ -7,14 +7,14 @@ N = size(points3D, 1);
 points3D = padarray(points3D,[0,1],1,'post');
 
 % The threshold to decide inliers
-threshold = 1000;
+threshold = 10;
 % Max number of inliers
 inlier_num = 0;
 % Randomly choose the initial 7 point pairs
-for i = 1 : 500
+for i = 1 : 1000
     random = randi(N, 1, 6);
     %random = [1:6];
-    % Proj using sevenpoint
+    % Proj using six points
     Proj_six = six_points( points3D(random, :), points2D(random, :));
         % The value of reprojection error
         reproj_points2D = Proj_six*points3D';
@@ -30,7 +30,7 @@ for i = 1 : 500
             pts1_inlier_ = points3D(inlier, :);
             pts2_inlier_ = points2D(inlier, :);
         end
-end
+    end
 end
 
 

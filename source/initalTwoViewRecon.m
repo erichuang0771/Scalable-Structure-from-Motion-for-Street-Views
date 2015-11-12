@@ -58,6 +58,7 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
 %     camProjTable(:,:,1) = K1*[R1 T1];%Proj1;
 %     camProjTable(:,:,2) = K2*[R2 T2];%Proj2;
     %done
+    camProjTable(:,:,end-24:end) = [];
     
     %% triangulartion
      [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulation( featureTable, camProjTable, featureCell,Z, inlier_index,im1);

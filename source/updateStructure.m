@@ -1,4 +1,4 @@
-function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,featureTable, camProjTable, featureCell,Z )
+function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,featureTable, camProjTable, featureCell,Z, camCnt )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
     % extract feature    
@@ -15,7 +15,7 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     points2D(remove_index,:) = [];
 
     NUM = size(matches,2);
-  %  match_plot(ims{1},ims{2},P1_inlier(:,1:2),points2D(:,1:2));
+
     inlier_index = matches(1,:);
     if size(points3D,1) == 0
          fprintf('Num of useful 3D points: %d\n',size(matches,2)-size(remove_index,1))
@@ -24,6 +24,8 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     %% estimate the camera projection matrix
     % not sure it is correct or not
     [ Proj, ~, ~, ~ ] = estimateCameraProjRANSAC( points3D, points2D);
+    %points3D = padarray(points3D,[0,1],1,'post');
+    %%% Proj = six_points( points3D, points2D);
     new_feature = setdiff(1:size(f,2),matches(1,:));
     
     
@@ -65,7 +67,9 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     %done
     
     %% camProjTable
-    %camProjTable(:,:,end+1) = Proj;
+    if camCnt > 22
+        camProjTable(:,:,end+1) = Proj;
+    end
     %done
     
     %% triangulartion
