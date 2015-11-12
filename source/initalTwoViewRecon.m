@@ -9,14 +9,14 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
     [f2,d2] = vl_sift(I2);
     
     %%match & find correspounding points
-    [matches, scores] = vl_ubcmatch(d1, d2);
+    [matches, ~] = vl_ubcmatch(d1, d2);
     P1 = [f1(1,matches(1,:))' f1(2,matches(1,:))', ones(size(matches(1,:)))'];
     P2 = [f2(1,matches(2,:))' f2(2,matches(2,:))', ones(size(matches(2,:)))'];
   
     %% RANSAC F
     width = size(im1,2);
     height = size(im1,1);
-    [ F, P1_inlier, P2_inlier, inlier_index ] = ransacF( P1(:,1:2), P2(:,1:2), max(width,height));
+    [ F, ~, ~, inlier_index ] = ransacF( P1(:,1:2), P2(:,1:2), max(width,height));
    %load three.mat;
  %  inlier_index = index;
     %% find the F matrix ??? not sure
@@ -58,7 +58,7 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
 %     camProjTable(:,:,1) = K1*[R1 T1];%Proj1;
 %     camProjTable(:,:,2) = K2*[R2 T2];%Proj2;
     %done
-    camProjTable(:,:,end-24:end) = [];
+    camProjTable(:,:,3:end) = [];
     
     %% triangulartion
      [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulation( featureTable, camProjTable, featureCell,Z, inlier_index,im1);

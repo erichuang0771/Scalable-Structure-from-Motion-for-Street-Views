@@ -67,9 +67,9 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     %done
     
     %% camProjTable
-    if camCnt > 22
-        camProjTable(:,:,end+1) = Proj;
-    end
+    
+      camProjTable(:,:,end+1) = Proj;
+    
     %done
     
     %% triangulartion
