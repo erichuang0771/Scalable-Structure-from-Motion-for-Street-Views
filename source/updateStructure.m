@@ -1,4 +1,4 @@
-function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,featureTable, camProjTable, featureCell,Z, camCnt )
+function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, last_3D] = updateStructure( ims,featureTable, camProjTable, featureCell,Z, last_feature, last_desc, last_3D )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
     % extract feature    
@@ -8,24 +8,27 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     % find the correspounding
     [matches, ~] = vl_ubcmatch(d, uint8(featureTable(:,1:128)'),2);
     fprintf('Num of matches: %d\n',size(matches,2))
-    points3D = featureTable(matches(2,:),129:131);
-    points2D = [f(1,matches(1,:))' f(2,matches(1,:))', ones(size(matches(1,:)))'];
-    remove_index = find(points3D(:,1) == 0 & points3D(:,2) == 0 & points3D(:,3) == 0  );
-    points3D(remove_index,:) = [];
-    points2D(remove_index,:) = [];
+%     points3D = featureTable(matches(2,:),129:131);
+%     points2D = [f(1,matches(1,:))' f(2,matches(1,:))', ones(size(matches(1,:)))'];
+%     remove_index = find(points3D(:,1) == 0 & points3D(:,2) == 0 & points3D(:,3) == 0  );
+%     points3D(remove_index,:) = [];
+%     points2D(remove_index,:) = [];
 
     NUM = size(matches,2);
 
-    inlier_index = matches(1,:);
-    if size(points3D,1) == 0
-         fprintf('Num of useful 3D points: %d\n',size(matches,2)-size(remove_index,1))
-        pause;
-    end
+%     inlier_index = matches(1,:);
+%     if size(points3D,1) == 0
+%          fprintf('Num of useful 3D points: %d\n',size(matches,2)-size(remove_index,1))
+%         pause;
+%     end
+
     %% estimate the camera projection matrix
     % not sure it is correct or not
-    [ Proj, ~, ~, ~ ] = estimateCameraProjRANSAC( points3D, points2D);
-    %points3D = padarray(points3D,[0,1],1,'post');
-    %%% Proj = six_points( points3D, points2D);
+    width = size(ims,2);
+    height = size(ims,1);
+    [matches_F, ~] = vl_ubcmatch(last_desc,d);
+    [ ~, ~, F_inliner_2D, F_inlier_index ] = ransacF( last_feature(1:2,matches_F(1,:))', f(1:2,matches_F(2,:))', max(width,height));
+    [ Proj] = estimateCameraProjRANSAC( last_3D(F_inlier_index,:), F_inliner_2D);
     new_feature = setdiff(1:size(f,2),matches(1,:));
     
     
@@ -76,16 +79,11 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
      [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulationAll( featureTable, camProjTable, featureCell,Z, ims);
    %  save test.mat featureTable camProjTable  featureCell Z
      %save_ply('what.ply',featureTable(:,129:end));
-    
-    
      
-     
-     
-     
-    
-    
-    
-
+      %% get last 3D cords and the last feature and desc to estimate the proj M for next frame
+     last_3D = featureTable(matches(2,:), 129:131);
+     last_feature = f(:,matches(1,:));
+     last_desc = d(:,matches(1,:));
 
 end
 

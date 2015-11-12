@@ -1,4 +1,4 @@
-function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im1, im2 )
+function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, last_3D    ] = initalTwoViewRecon( im1, im2 )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
     I1 = single(rgb2gray(im1));
@@ -7,6 +7,8 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
     %%extract SIFT features
     [f1,d1] = vl_sift(I1);
     [f2,d2] = vl_sift(I2);
+    
+ 
     
     %%match & find correspounding points
     [matches, ~] = vl_ubcmatch(d1, d2);
@@ -17,7 +19,7 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
     width = size(im1,2);
     height = size(im1,1);
     [ F, ~, ~, inlier_index ] = ransacF( P1(:,1:2), P2(:,1:2), max(width,height));
-   %load three.mat;
+    %load three.mat;
  %  inlier_index = index;
     %% find the F matrix ??? not sure
     Proj1 = [eye(3), zeros(3,1)];
@@ -64,5 +66,10 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
      [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulation( featureTable, camProjTable, featureCell,Z, inlier_index,im1);
     % save test.mat featureTable camProjTable  featureCell Z
      %save_ply('what.ply',featureTable(:,129:end));
+     
+     %% get last 3D cords and the last feature and desc to estimate the proj M for next frame
+     last_3D = featureTable(inlier_index, 129:131);
+     last_feature = f2(:,matches(2,inlier_index));
+     last_desc = d2(:,matches(2,inlier_index));
 end
 
