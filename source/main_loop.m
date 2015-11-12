@@ -10,4 +10,9 @@ for i = 3:47
     fprintf('finish view %d',i);
     size(find(featureTable(:,129) ~= 0),1)
 end
-save_ply('what.ply',featureTable(featureTable(:,129) ~= 0,129:end));
+
+intensity = sum(featureTable(:,132:134),2);
+
+save_ply('what.ply',featureTable(featureTable(:,129) ~= 0 & intensity(:) > 100,129:end));
+
+save_Cam_Pos(camProjTable);

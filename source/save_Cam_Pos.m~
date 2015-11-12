@@ -1,0 +1,10 @@
+function [] = save_Cam_Pos(camProjTable)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+    for i = 1:size(camProjTable(:,:,3))
+        
+    end
+    
+
+end
+

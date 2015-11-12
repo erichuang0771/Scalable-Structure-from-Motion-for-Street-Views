@@ -5,8 +5,8 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     I = single(rgb2gray(ims));
     [f,d] = vl_sift(I);
     M = max(size(ims));
-    %find the correspounding
-    [matches, scores] = vl_ubcmatch(d, uint8(featureTable(:,1:128)'),2);
+    % find the correspounding
+    [matches, ~] = vl_ubcmatch(d, uint8(featureTable(:,1:128)'),2);
     fprintf('Num of matches: %d\n',size(matches,2))
     points3D = featureTable(matches(2,:),129:131);
     points2D = [f(1,matches(1,:))' f(2,matches(1,:))', ones(size(matches(1,:)))'];
@@ -65,11 +65,11 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     %done
     
     %% camProjTable
-    camProjTable(:,:,end+1) = Proj;
+    %camProjTable(:,:,end+1) = Proj;
     %done
     
     %% triangulartion
-     [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulationAll( featureTable, camProjTable, featureCell,Z);
+     [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulationAll( featureTable, camProjTable, featureCell,Z, ims);
    %  save test.mat featureTable camProjTable  featureCell Z
      %save_ply('what.ply',featureTable(:,129:end));
     

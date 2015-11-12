@@ -1,4 +1,4 @@
-function [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulationAll( featureTable, camProjTable, featureCell,Z )
+function [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulationAll( featureTable, camProjTable, featureCell,Z,ims )
 %UNTITLED2 Summary of this function goes here
 
 % update every feature if it viewed by at least two cameras
@@ -17,8 +17,8 @@ function [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulationA
         [~,~,V] = svd([A;B]);
         point3D = V(:,end); point3D = point3D/point3D(4);
         featureTable(i,129:131) = point3D(1:3)';
-        if i == size(featureTable,2) -20
-            point3D; 
+        if featureTable(i,132) == 0
+            featureTable(i,132:134) = reshape(ims(round(pts(2,1)),round(pts(1,1)),:),1,3);
         end
     end
 end

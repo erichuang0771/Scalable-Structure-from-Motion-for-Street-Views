@@ -50,16 +50,17 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
     %done
     
     %% camProjTable
-    camProjTable = zeros(3,4,2);
-    %%%debug:
-        load proj1_2.mat;
-    %%%
-    camProjTable(:,:,1) = K1*[R1 T1];%Proj1;
-    camProjTable(:,:,2) = K2*[R2 T2];%Proj2;
+    load CamProj.mat
+%     camProjTable = zeros(3,4,2);
+%     %%%debug:
+%         load proj1_2.mat;
+%     %%%
+%     camProjTable(:,:,1) = K1*[R1 T1];%Proj1;
+%     camProjTable(:,:,2) = K2*[R2 T2];%Proj2;
     %done
     
     %% triangulartion
-     [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulation( featureTable, camProjTable, featureCell,Z, inlier_index);
+     [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulation( featureTable, camProjTable, featureCell,Z, inlier_index,im1);
     % save test.mat featureTable camProjTable  featureCell Z
      %save_ply('what.ply',featureTable(:,129:end));
 end
