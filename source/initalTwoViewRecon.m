@@ -17,8 +17,8 @@ function [ featureTable, camProjTable, featureCell,Z  ] = initalTwoViewRecon( im
     width = size(im1,2);
     height = size(im1,1);
     [ F, P1_inlier, P2_inlier, inlier_index ] = ransacF( P1(:,1:2), P2(:,1:2), max(width,height));
-   load three.mat;
-   inlier_index = index;
+   %load three.mat;
+ %  inlier_index = index;
     %% find the F matrix ??? not sure
     Proj1 = [eye(3), zeros(3,1)];
     [~,~,V] = svd(F');

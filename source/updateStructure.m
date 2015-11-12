@@ -1,4 +1,4 @@
-function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,featureTable, camProjTable, featureCell,Z, camCounter )
+function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,featureTable, camProjTable, featureCell,Z )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
     % extract feature    
@@ -7,6 +7,7 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     M = max(size(ims));
     %find the correspounding
     [matches, scores] = vl_ubcmatch(d, uint8(featureTable(:,1:128)'),2);
+    fprintf('Num of matches: %d\n',size(matches,2))
     points3D = featureTable(matches(2,:),129:131);
     points2D = [f(1,matches(1,:))' f(2,matches(1,:))', ones(size(matches(1,:)))'];
     remove_index = find(points3D(:,1) == 0 & points3D(:,2) == 0 & points3D(:,3) == 0  );
@@ -16,6 +17,10 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     NUM = size(matches,2);
   %  match_plot(ims{1},ims{2},P1_inlier(:,1:2),points2D(:,1:2));
     inlier_index = matches(1,:);
+    if size(points3D,1) == 0
+         fprintf('Num of useful 3D points: %d\n',size(matches,2)-size(remove_index,1))
+        pause;
+    end
     %% estimate the camera projection matrix
     % not sure it is correct or not
     [ Proj, ~, ~, ~ ] = estimateCameraProjRANSAC( points3D, points2D);
@@ -38,7 +43,7 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
     for cnt = 1:NUM
         % add new 2d pos into already exists feature cell
         i = matches(2,cnt);
-        if size(featureCell{i},2) >= camCounter
+        if size(featureCell{i},2) > size(find(Z(:,i)==1),1)
             continue;
         end
         featureCell{i} = [featureCell{i} f(1:2,matches(1,cnt))];
