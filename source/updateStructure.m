@@ -78,6 +78,10 @@ function [ featureTable, camProjTable, featureCell,Z ] = updateStructure( ims,fe
      %save_ply('what.ply',featureTable(:,129:end));
     
     
+     
+     
+     
+     
     
     
     
