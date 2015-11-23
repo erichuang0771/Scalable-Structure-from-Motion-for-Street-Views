@@ -8,9 +8,9 @@ points3D = padarray(points3D,[0,1],1,'post');
 %  Proj = six_points( points3D(1:6, :), points2D(1:6, :),M);
 %  return;
 % The threshold to decide inliers
-threshold = 10;
+threshold = 0.1;
 % Max number of inliers
-inlier_num = 0;
+inlier_num = 6;
 % Randomly choose the initial 7 point pairs
 for i = 1 : 1000
     random = randi(N, 1, 6);
@@ -33,6 +33,7 @@ for i = 1 : 1000
             pts2_inlier_ = points2D(inlier, :);
         end
     end
+    
 end
 
 

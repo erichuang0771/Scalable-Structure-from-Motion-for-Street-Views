@@ -34,6 +34,7 @@ for i = 1 : 100
             index = find(abs(error) < threshold);
             % F using eightpoint with inliers
             F = eightpoint( pts1(inlier, :), pts2(inlier, :), M );
+            F = refineF(F,pts1(inlier, :),pts2(inlier, :));
             pts1_inlier = pts1(inlier, :);
             pts2_inlier = pts2(inlier, :);
         end

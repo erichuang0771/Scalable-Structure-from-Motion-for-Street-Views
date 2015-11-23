@@ -6,12 +6,13 @@ width = size(ims{1},2);
 height = size(ims{1},1);
 
 camProjTable = zeros(3,4,47);
-
+camPoseTable = zeros(3,4,47);
 for i = 1:47
     K1 = reshape(paras(i,1:9),3,3)';
     R1 = reshape(paras(i,10:18),3,3)';
     T1 = reshape(paras(i,19:end),3,1);
     camProjTable(:,:,i) = K1*[R1 T1];
+    camPoseTable(:,:,i) = [R1 T1];
 end
 
 save_Cam_Pos(camProjTable);

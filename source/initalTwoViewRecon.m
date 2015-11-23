@@ -1,4 +1,4 @@
-function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, last_3D    ] = initalTwoViewRecon( im1, im2 )
+function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, last_3D, camPose ,length   ] = initalTwoViewRecon( im1, im2 )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
     I1 = single(rgb2gray(im1));
@@ -61,7 +61,9 @@ function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, l
 %     camProjTable(:,:,2) = K2*[R2 T2];%Proj2;
     %done
     camProjTable(:,:,3:end) = [];
+   
     
+   
     %% triangulartion
      [ featureTable, camProjTable, featureCell,Z ] = MultiViewTriangulation( featureTable, camProjTable, featureCell,Z, inlier_index,im1);
     % save test.mat featureTable camProjTable  featureCell Z
@@ -71,5 +73,15 @@ function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, l
      last_3D = featureTable(inlier_index, 129:131);
      last_feature = f2(:,matches(2,inlier_index));
      last_desc = d2(:,matches(2,inlier_index));
+     
+     %% get the camera pose
+     load camPoseTable.mat;
+     camPose = cell(1,2);
+     r = camProjTable(1:3,1:3,end);
+     t = camProjTable(:,end);
+     length = last_3D - repmat((-inv(r)*t)',size(last_3D,1),1);
+     camPose{1} = camPoseTable(:,:,1);
+     camPose{2} = camPoseTable(:,:,2);
+     
 end
 

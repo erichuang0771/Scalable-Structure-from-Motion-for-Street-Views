@@ -5,10 +5,10 @@ function [ Proj ] = estimateCameraProjRANSAC( points3D, points2D,M )
 N = size(points3D, 1);
 %padarry points3D X Y Z 1
 points3D = padarray(points3D,[0,1],1,'post');
- Proj = six_points( points3D(1:6, :), points2D(1:6, :),M);
- return;
+%  Proj = six_points( points3D(1:6, :), points2D(1:6, :),M);
+%  return;
 % The threshold to decide inliers
-threshold = 10;
+threshold = 1;
 % Max number of inliers
 inlier_num = 0;
 % Randomly choose the initial 7 point pairs
