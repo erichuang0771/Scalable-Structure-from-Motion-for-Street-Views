@@ -27,7 +27,7 @@ function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, l
     width = size(ims,2);
     height = size(ims,1);
     [matches_F, ~] = vl_ubcmatch(last_desc,d);
-    [ FFF, last_inliner_2D, F_inliner_2D, F_inlier_index ] = ransacF( last_feature(1:2,matches_F(1,:))', f(1:2,matches_F(2,:))', max(width,height));
+    [ FFF, last_inliner_2D, F_inliner_2D, F_inlier_index ] = ransacF( last_feature(1:2,matches_F(1,:))', f(1:2,matches_F(2,:))', [width,height]);
     %match_plot(debug_im,ims, last_inliner_2D,F_inliner_2D);
     
 %     test3D = padarray(last_3D(matches_F(1,F_inlier_index),:),[0,1],1,'post');
@@ -36,9 +36,10 @@ function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, l
 %     
     %% using F and assume we have K instrinsc M
      load K.mat 
-    % E = K'*FFF*K;
-    E = five_pts_solver(last_feature(1:2,matches_F(1,:))',f(1:2,matches_F(2,:))',K);
-     [M2s] = camera2(eval(E));
+     E = K'*FFF*K;
+     displayEpipolarF(debug_im, ims, FFF);
+    %E = five_pts_solver(last_feature(1:2,matches_F(1,:))',f(1:2,matches_F(2,:))',K);
+     [M2s] = camera2(E);
 %     error()
      for i = 1:size(M2s,3)
         [P{i},error(i),orient(i)]= triangulate(K*[eye(3,3) zeros(3,1)],last_inliner_2D(:,1:2),K*M2s(:,:,i), F_inliner_2D(:,1:2));

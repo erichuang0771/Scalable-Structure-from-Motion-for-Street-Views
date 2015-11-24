@@ -17,7 +17,7 @@ ims = loadImages('../data/template/');
 %%
 for i = 3:47
     [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, last_3D, camPose, length  ]...
-    = updateStructure( ims{i},featureTable, camProjTable, featureCell,Z,last_feature, last_desc, last_3D, ims{2}, camPose, length);
+    = updateStructure( ims{i},featureTable, camProjTable, featureCell,Z,last_feature, last_desc, last_3D, ims{i-1}, camPose, length);
     
     fprintf('finish view %d',i);
     size(find(featureTable(:,129) ~= 0),1)

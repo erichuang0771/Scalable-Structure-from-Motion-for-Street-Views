@@ -18,7 +18,7 @@ function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, l
     %% RANSAC F
     width = size(im1,2);
     height = size(im1,1);
-    [ F, ~, ~, inlier_index ] = ransacF( P1(:,1:2), P2(:,1:2), max(width,height));
+    [ F, A, B, inlier_index ] = ransacF( P1(:,1:2), P2(:,1:2), [width,height]);
     %load three.mat;
  %  inlier_index = index;
     %% find the F matrix ??? not sure

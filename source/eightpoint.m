@@ -11,16 +11,23 @@ function [ F ] = eightpoint( pts1, pts2, M )
 
 %     Write F and display the output of displayEpipolarF in your writeup
 
-M = [2/M,0,-1;0,2/M,-1;0,0,1];
-pts1_n = padarray(pts1,[0,1],1,'post')*M';
-pts2_n = padarray(pts2,[0,1],1,'post')*M';
-A = pts1_n.*repmat(pts2_n(:,1),1,3);
-B = pts1_n.*repmat(pts2_n(:,2),1,3);
-C = [A B pts1_n];
-[~,~,V] = svd(C);
-F = V(:,end);
-F = reshape(F,3,3)';
-refineF(F,pts1,pts2);
-F = M'*F*M;
+% Scaling
+N = size(pts1, 1);
+T = diag([1 / M(1), 1 / M(2), 1]);
+pts1_norm = [pts1, ones(N, 1)] * T';
+pts2_norm = [pts2, ones(N, 1)] * T';
+% Calculate F
+U = [pts1_norm(:, 1) .* pts2_norm(:, 1), pts1_norm(:, 2) .* pts2_norm(:, 1), pts2_norm(:, 1), ...
+    pts1_norm(:, 1) .* pts2_norm(:, 2), pts1_norm(:, 2) .* pts2_norm(:, 2), pts2_norm(:, 2), ...
+    pts1_norm(:, 1), pts1_norm(:, 2), ones(N, 1)];
+[vec, ~] = eig(U' * U);
+F = reshape(vec(:, 1), 3, 3)';
+% Refine and enforce singularity
+F = refineF(F, pts1_norm, pts2_norm);
+% Unscaling
+F = T' * F * T;
+% Save
+% save q2_1.mat F M pts1 pts2
+
 end
 
