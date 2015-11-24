@@ -2,7 +2,7 @@
 clc; clear all; close all;
 %run('../library/vlfeat/vlfeat-0.9.20/toolbox/vl_setup.m')
 addpath ../source/;
-addpath ../paper1_impl
+%addpath ../paper1_impl;
 
 ims = loadImages('../data/template/');
 [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, last_3D, camPose  ,length]...

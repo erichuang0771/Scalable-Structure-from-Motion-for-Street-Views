@@ -20,7 +20,7 @@ threshold = 0.001;
 % Max number of inliers
 inlier_num = 0;
 % Randomly choose the initial 7 point pairs
-for i = 1 : 100
+for i = 1 : 300
     random = randi(N, 1, 7);
     % F using sevenpoint
     F_seven = sevenpoint( pts1(random, :), pts2(random, :), M );
