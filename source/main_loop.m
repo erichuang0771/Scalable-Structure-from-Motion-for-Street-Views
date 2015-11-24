@@ -15,7 +15,7 @@ ims = loadImages('../data/template/');
 %     save_Cam_Pos(camProjTable);
 %     
 %%
-for i = 3:47
+for i = 3:5
     [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, last_3D, camPose, length  ]...
     = updateStructure( ims{i},featureTable, camProjTable, featureCell,Z,last_feature, last_desc, last_3D, ims{i-1}, camPose, length);
     

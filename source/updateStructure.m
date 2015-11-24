@@ -57,9 +57,9 @@ function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, l
      now_dist  = sqrt(sum(abs(PPP.^2),2));
      scale = median(prev_dist./now_dist);
      T_world = (R*prev_T+T*scale);
-       load camPoseTable.mat;
-       R_world = camPoseTable(1:3,1:3,size(camPose,2)+1);
-       T_world = camPoseTable(:,end,size(camPose,2)+1);
+       %load camPoseTable.mat;
+       %R_world = camPoseTable(1:3,1:3,size(camPose,2)+1);
+       %T_world = camPoseTable(:,end,size(camPose,2)+1);
      Proj = K*[R_world, T_world];
      
      
