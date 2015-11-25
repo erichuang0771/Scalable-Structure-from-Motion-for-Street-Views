@@ -50,10 +50,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/eric/Documents/OpenSFM
+CMAKE_SOURCE_DIR = /home/eric/Documents/OpenSLAM/OpenSFM
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/eric/Documents/OpenSFM/build
+CMAKE_BINARY_DIR = /home/eric/Documents/OpenSLAM/OpenSFM/build
 
 #=============================================================================
 # Target rules for target CMakeFiles/OpenSfM.dir
@@ -62,7 +62,7 @@ CMAKE_BINARY_DIR = /home/eric/Documents/OpenSFM/build
 CMakeFiles/OpenSfM.dir/all:
 	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/depend
 	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSFM/build/CMakeFiles  1
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles  1 2
 	@echo "Built target OpenSfM"
 .PHONY : CMakeFiles/OpenSfM.dir/all
 
@@ -72,9 +72,9 @@ all: CMakeFiles/OpenSfM.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/OpenSfM.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/eric/Documents/OpenSFM/build/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/OpenSfM.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/eric/Documents/OpenSFM/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles 0
 .PHONY : CMakeFiles/OpenSfM.dir/rule
 
 # Convenience name for target.

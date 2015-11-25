@@ -31,29 +31,30 @@ void parse_argv(int argc, char** argv) {
 }
 
 
-
-
-
-
 int main(int argc, char** argv) {
 
-  parse_argv(argc, argv);
-  int file_name_counter = atoi(argv[2]);
+  // parse_argv(argc, argv);
+  // int file_name_counter = atoi(argv[2]);
 
-  std::string render_dir = argv[1];
+  // std::string render_dir = argv[1];
   
-  DIR* render_DIR;
-  if ((render_DIR = opendir(render_dir.c_str())) == NULL) {
-    printf("Problem opening directory: %s\n", render_dir.c_str());
-    exit(-1);
-  }
+  // DIR* render_DIR;
+  // if ((render_DIR = opendir(render_dir.c_str())) == NULL) {
+  //   printf("Problem opening directory: %s\n", render_dir.c_str());
+  //   exit(-1);
+  // }
+  //
+   OpenSfM* tester = new OpenSfM();
+   string hehe = "heehhehe";
+   tester->run(hehe);
+   return 0;
    
 
 
-  struct dirent* file;
-  while (file = readdir(render_DIR)) {
+  // struct dirent* file;
+  // while (file = readdir(render_DIR)) {
 
 
 
-        }
+  //       }
   }

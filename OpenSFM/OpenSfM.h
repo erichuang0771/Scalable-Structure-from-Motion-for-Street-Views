@@ -20,15 +20,13 @@
 #include <armadillo>
 
 struct last_frame{
-			arma::fmat& features;
-			arma::fmat& decs;
-			arma::fmat& length; 	
+			arma::fmat features;
+			arma::fmat decs;
+			arma::fmat length; 	
 };
 
 
 class OpenSfM{
-private:
-
 
 public:
 	arma::fmat* featureTable;
@@ -37,6 +35,14 @@ public:
 	arma::fmat* cameraPose;
 	arma::fmat* Z;
 
+int run(std::string dir_images);
+/* run structure from motion
+	input: read from string
+	output: 1 success and 0 fails
+ */
+
+private:
+
 int loadParas();
 /*
 	load intrinsc K and all thresholds....from configure txt file	
@@ -44,7 +50,6 @@ int loadParas();
 	output: 1 if succcess
 		   0 if error
  */
-
 int multiViewTriangulation(arma::umat& index , cv::Mat& ims);
 /*
 	update 3d points in feature table that viewed by at least three camseras
@@ -69,6 +74,4 @@ last_frame* initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB);
 	ouput: last_frame: the struct that contains all info needed in updating
 		   
  */
-
-
 };

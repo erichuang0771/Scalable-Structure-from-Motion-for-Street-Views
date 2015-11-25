@@ -4,5 +4,5 @@ find_package( OpenCV REQUIRED )
 find_package(Armadillo REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-add_executable( OpenSfM Demo.cpp )
+add_executable( OpenSfM OpenSfM.cpp Demo.cpp )
 target_link_libraries( OpenSfM ${OpenCV_LIBS} ${ARMADILLO_LIBRARIES})

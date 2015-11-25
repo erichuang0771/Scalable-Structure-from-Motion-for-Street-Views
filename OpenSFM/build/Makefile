@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/eric/Documents/OpenSFM
+CMAKE_SOURCE_DIR = /home/eric/Documents/OpenSLAM/OpenSFM
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/eric/Documents/OpenSFM/build
+CMAKE_BINARY_DIR = /home/eric/Documents/OpenSLAM/OpenSFM/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -72,9 +72,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/eric/Documents/OpenSFM/build/CMakeFiles /home/eric/Documents/OpenSFM/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/eric/Documents/OpenSFM/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -138,6 +138,30 @@ Demo.cpp.s:
 	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/Demo.cpp.s
 .PHONY : Demo.cpp.s
 
+OpenSfM.o: OpenSfM.cpp.o
+.PHONY : OpenSfM.o
+
+# target to build an object file
+OpenSfM.cpp.o:
+	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o
+.PHONY : OpenSfM.cpp.o
+
+OpenSfM.i: OpenSfM.cpp.i
+.PHONY : OpenSfM.i
+
+# target to preprocess a source file
+OpenSfM.cpp.i:
+	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/OpenSfM.cpp.i
+.PHONY : OpenSfM.cpp.i
+
+OpenSfM.s: OpenSfM.cpp.s
+.PHONY : OpenSfM.s
+
+# target to generate assembly for a file
+OpenSfM.cpp.s:
+	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/OpenSfM.cpp.s
+.PHONY : OpenSfM.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -150,6 +174,9 @@ help:
 	@echo "... Demo.o"
 	@echo "... Demo.i"
 	@echo "... Demo.s"
+	@echo "... OpenSfM.o"
+	@echo "... OpenSfM.i"
+	@echo "... OpenSfM.s"
 .PHONY : help
 
 

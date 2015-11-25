@@ -1,4 +1,5 @@
 FILE(REMOVE_RECURSE
+  "CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o"
   "CMakeFiles/OpenSfM.dir/Demo.cpp.o"
   "OpenSfM.pdb"
   "OpenSfM"
