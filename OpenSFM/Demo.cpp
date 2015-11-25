@@ -24,8 +24,8 @@
 
 using namespace cv;
 void parse_argv(int argc, char** argv) {
-  if(argc < 4) {
-    printf("Incorrect usage: Demo image_dir begin_counter\n");
+  if(argc != 2) {
+    printf("Incorrect usage: Demo image_dir\n");
     exit(-1);
   }
 }
@@ -33,7 +33,7 @@ void parse_argv(int argc, char** argv) {
 
 int main(int argc, char** argv) {
 
-  // parse_argv(argc, argv);
+  parse_argv(argc, argv);
   // int file_name_counter = atoi(argv[2]);
 
   // std::string render_dir = argv[1];
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
   //
    OpenSfM* tester = new OpenSfM();
    string hehe = "heehhehe";
-   tester->run(hehe);
+   tester->run(argv[1]);
    return 0;
    
 

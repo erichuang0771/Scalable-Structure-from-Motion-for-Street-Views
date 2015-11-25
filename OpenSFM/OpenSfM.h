@@ -19,6 +19,8 @@
 #include <highgui.h>
 #include <armadillo>
 
+#define DEBUG 1
+
 struct last_frame{
 			arma::fmat features;
 			arma::fmat decs;
