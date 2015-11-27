@@ -113,7 +113,6 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
   		cout<<"size of desc A: "<<descA.rows<<" | "<<descA.cols<<endl;
   		cout<<"size of desc B: "<<descB.rows<<" | "<<descB.cols<<endl;
 
-
   		waitKey(0);
 
 	  }
@@ -125,9 +124,10 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 
 
 	  /* STEP 5  get F matrix
-	  	
+	  	and check Epolier line
 	   */
-	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, FM_RANSAC, 3, 0.99);
+	  Mat mask;
+	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, FM_RANSAC, 3, 0.99, mask);
 	  
 	  if(DEBUG) {
 	  	/* code */
@@ -136,25 +136,70 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  	cout<<"size of Epilines: "<<Epilines.rows<<" | "<<Epilines.cols<<endl;
 	  	cout<<"depth of Epilines: "<<Epilines.depth()<<endl;
 
+	  	//float top_horizontal[3] =    {0, 1, 0};
+	  	 Point3f top_horizontal = Point3f(0,1,0);
+		 Point3f left_vertical  =   Point3f(1, 0, 0); 
+		 Point3f bottom_horizontal = Point3f(0, 1, -imA.rows); 
+		 Point3f right_vertical =    Point3f(1, 0, -imA.cols); 
+
 	  	Mat Epilines_show = imA;
 	 	for(int i = 0; i < Epilines.rows; i++){
-	 		float x = P1f[i].x;
-	 		float y = P1f[i].y;
-	 		// line(Epilines_show,Point(x,(-Epilines.at<float>(i,2)-(x)*Epilines.at<float>(i,0))/Epilines.at<float>(i,1)),
-	 		// 					Point(x+100,(-Epilines.at<float>(i,2)-(x+1)*Epilines.at<float>(i,0))/Epilines.at<float>(i,1)),
-	 		// 					CV_RGB(128, 128, 0));
-	 		cout<<"point: "<<x<<"  "<<y<<endl;
+	 		Point2f A;
+	 		Point2f B;
+
+	 		Point3f Eline = Point3f(Epilines.at<float>(i,0),Epilines.at<float>(i,1),Epilines.at<float>(i,2));
+	 		Point3f candidate_1 = top_horizontal.cross(Eline);
+	 		Point2f candidate_1_cord = Point2f(candidate_1.x/candidate_1.z, candidate_1.y/candidate_1.z);
+	 		if(candidate_1_cord.x >= 0 && candidate_1_cord.x <= imA.cols) {
+	 			/* code */
+	 			A = candidate_1_cord;
+	 		}
+	 		Point3f candidate_2 = left_vertical.cross(Eline);
+	 		Point2f candidate_2_cord = Point2f(candidate_2.x/candidate_2.z, candidate_2.y/candidate_2.z);
+	 		if(candidate_2_cord.y >= 0 && candidate_2_cord.y <= imA.cols) {
+	 			/* code */
+	 			A = candidate_2_cord;
+	 		}
+	 		Point3f candidate_3 = bottom_horizontal.cross(Eline);
+	 		Point2f candidate_3_cord = Point2f(candidate_3.x/candidate_3.z, candidate_3.y/candidate_3.z);
+	 		if(candidate_3_cord.x >= 0 && candidate_3_cord.x <= imA.cols) {
+	 			/* code */
+	 			B = candidate_3_cord;
+	 		}
+	 		Point3f candidate_4 = right_vertical.cross(Eline);
+	 		Point2f candidate_4_cord = Point2f(candidate_4.x/candidate_4.z, candidate_4.y/candidate_4.z);
+	 		if(candidate_4_cord.y >= 0 && candidate_4_cord.y <= imA.cols) {
+	 			/* code */
+	 			B = candidate_4_cord;
+	 		}
+
+	 		line(Epilines_show,A,B,Scalar(0,255,0));
+	 		// cout<<"point: "<<x<<"  "<<y<<endl;
 	 	}
 	 	Mat Epilines_show_pts;
 	 	drawKeypoints( Epilines_show, P1, Epilines_show_pts, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
 	 	imshow("Epilines_show",Epilines_show_pts);
 	 	waitKey(0);
-
 	  }
+
+	  /* STEP 6  
+	  	create tables
+	   */
+	  int NUM = P1f.size();
+	  //handle featureTable;
+	  this->featureTable = new Mat(NUM,128+3+3,CV_32FC1);
+	  this->
+
+
+	  this->camProjTable = new vector<arma::fmat*>();
+
+	 // camProjTable->push_back(new fmat);
+	  
+	  
 
 	 // mat arma_mat( reinterpret_cast<double*>opencv_mat.data, opencv_mat.rows, opencv_mat.cols )
 
-
+	  
 
 
 	return new last_frame;

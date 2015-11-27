@@ -23,7 +23,7 @@
 
 struct last_frame{
 			arma::fmat features;
-			arma::fmat decs;
+			cv::Mat decs;
 			arma::fmat length; 	
 };
 
@@ -31,10 +31,10 @@ struct last_frame{
 class OpenSfM{
 
 public:
-	arma::fmat* featureTable;
-	arma::fmat* camProjTable;
-	arma::fmat* featureCell;
-	arma::fmat* cameraPose;
+	cv::Mat* featureTable;
+	std::vector<arma::fmat*>* camProjTable;
+	std::vector<arma::fmat*>* featureCell; //two dim vecctor
+	std::vector<arma::fmat*>* cameraPose;
 	arma::fmat* Z;
 
 int run(std::string dir_images);
