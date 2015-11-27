@@ -84,9 +84,10 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	 vector< DMatch > good_matches, test_matches;
 	 vector< KeyPoint >P1, P2;
 	 vector< Point2f > P1f, P2f;
+
 	 int cnt = 0;
 	  for( int i = 0; i < descA.rows; i++ ){
-	   if( matches[i].distance <= max(2*min_dist, 0.02) ){
+	   if( matches[i].distance <= max(5*min_dist, 0.02) ){
 	   	 good_matches.push_back( matches[i]);
 	   	 test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
 	   	 P1.push_back(keypointA[matches[i].queryIdx]);
@@ -112,6 +113,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 
   		cout<<"size of desc A: "<<descA.rows<<" | "<<descA.cols<<endl;
   		cout<<"size of desc B: "<<descB.rows<<" | "<<descB.cols<<endl;
+  		cout<<"size of good matches: "<<good_matches.size()<<endl;
 
   		waitKey(0);
 
@@ -127,7 +129,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  	and check Epolier line
 	   */
 	  Mat mask;
-	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, FM_RANSAC, 3, 0.99, mask);
+	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, CV_FM_RANSAC, 3, 0.99, mask);
 	  
 	  if(DEBUG) {
 	  	/* code */
@@ -185,10 +187,59 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  /* STEP 6  
 	  	create tables
 	   */
-	  int NUM = P1f.size();
+	  int NUM = 0;
+	  for(unsigned i = 0; i < mask.rows; ++i) {
+	  	/* code */
+	  	if(mask.at<char>(i,0) == 1) NUM++;
+	  }
+
+
 	  //handle featureTable;
-	  this->featureTable = new Mat(NUM,128+3+3,CV_32FC1);
-	  this->
+	  int num_of_feature = P1f.size();
+	  this->featureTable = new Mat(num_of_feature,128+3+3,CV_32FC1);
+	  this->featureCell = new vector<arma::umat*>();
+	  this->cameraPose = new vector<arma::fmat*>();
+	  this->camProjTable = new vector<arma::fmat*>();
+	  this->Z_i = new vector<unsigned>(num_of_feature);
+	  iota((this->Z_i)->begin(),(this->Z_i)->end(),0);
+	  this->Z_j = new vector<unsigned>(num_of_feature);
+	  iota((this->Z_j)->begin(),(this->Z_j)->end(),0);
+	  this->Z_v = new vector<unsigned>(num_of_feature,1);
+
+
+
+	  if(DEBUG){
+			cout<<"depth of mask: "<<mask.depth()<<endl;
+			cout<<"# of inliners: "<<NUM<<endl;
+			cout<<"# of all_features: "<<num_of_feature<<endl;
+		}
+
+	  for(unsigned i = 0; i < num_of_feature; ++i) {
+			/* insert tabel */
+	  		//1.copy desc of camB to the table for future match
+	  		descB.row(good_matches[i].trainIdx).copyTo(((this->featureTable)->row(i)).colRange(0,128));
+	  		//if(DEBUG) cout<<(this->featureTable)->row(i).colRange(0,2)<<" | "<<descB.row(good_matches[i].trainIdx).colRange(0,2)<<endl;
+	  		
+	  		//2.insert correspounding 2D points to feature cell
+	  		arma::umat* tmp_feature_per_cell = new arma::umat(2,2);
+	  		*tmp_feature_per_cell << P1f[i].x << P1f[i].y << arma::endr << P2f[i].x << P2f[i].y << arma::endr;
+	  		featureCell->push_back(tmp_feature_per_cell);
+
+		}
+		//3. init Z table;
+		//done when initilized
+
+		//4. init camProjTable
+		
+		arma::fmat* tmp_camProjTable = new arma::fmat(3,4);
+		*tmp_camProjTable  << 1 << 0 << 0 << 0 << arma::endr
+						   << 0 << 1 << 0 << 0 << arma::endr
+						   << 0 << 0 << 1 << 0;
+		this->camProjTable->push_back(tmp_camProjTable);	
+
+		// solve projCam for the camB
+		
+
 
 
 	  this->camProjTable = new vector<arma::fmat*>();

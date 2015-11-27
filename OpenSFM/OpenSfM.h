@@ -18,6 +18,7 @@
 #include <cv.h>
 #include <highgui.h>
 #include <armadillo>
+#include <numeric>
 
 #define DEBUG 1
 
@@ -31,11 +32,15 @@ struct last_frame{
 class OpenSfM{
 
 public:
+	arma::fmat intrinsc_K;
 	cv::Mat* featureTable;
 	std::vector<arma::fmat*>* camProjTable;
-	std::vector<arma::fmat*>* featureCell; //two dim vecctor
+	std::vector<arma::umat*>* featureCell; //two dim vecctor
 	std::vector<arma::fmat*>* cameraPose;
-	arma::fmat* Z;
+	//Z sparse matrix, when final triangulation, conver to arma & using find to speed up
+	std::vector<unsigned>* Z_i;
+	std::vector<unsigned>* Z_j;
+	std::vector<unsigned>* Z_v;
 
 int run(std::string dir_images);
 /* run structure from motion
