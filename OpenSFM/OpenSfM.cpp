@@ -248,7 +248,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		//Mat E = K.t()*fundamental_matrix*K;
 		vector<arma::fmat> Projs_camB;
 		AllPossiblePFromF(fundamental_matrix, K, Projs_camB);
-
+		
 
 
 	 // camProjTable->push_back(new fmat);
