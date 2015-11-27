@@ -1,4 +1,5 @@
 #include "OpenSfM.h"
+#include "GeometryFunctions.h"
 
 using namespace std;
 using namespace cv;
@@ -239,10 +240,16 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 
 		// solve projCam for the camB
 		
+		Mat K = Mat(3,3,CV_32FC1,(this->intrinsc_K).memptr());
+		K.convertTo(K,CV_64FC1);
+		K = K.t();
+		if(DEBUG) cout<<" intrinsc_K : "<<K<<endl;
+
+		//Mat E = K.t()*fundamental_matrix*K;
+		vector<arma::fmat> Projs_camB;
+		AllPossiblePFromF(fundamental_matrix, K, Projs_camB);
 
 
-
-	  this->camProjTable = new vector<arma::fmat*>();
 
 	 // camProjTable->push_back(new fmat);
 	  
@@ -256,4 +263,6 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	return new last_frame;
 
 
-}
+	}
+
+

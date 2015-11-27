@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/eric/Documents/OpenSLAM/OpenSFM/OpenSfM.cpp
-OpenSfM.h
-/home/eric/Documents/OpenSLAM/OpenSFM/OpenSfM.h
+/home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.cpp
+GeometryFunctions.h
+/home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.h
 
-/home/eric/Documents/OpenSLAM/OpenSFM/OpenSfM.h
+/home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.h
 stdio.h
 -
 iostream

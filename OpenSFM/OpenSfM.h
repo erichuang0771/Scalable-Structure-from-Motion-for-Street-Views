@@ -81,4 +81,5 @@ last_frame* initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB);
 	ouput: last_frame: the struct that contains all info needed in updating
 		   
  */
+
 };

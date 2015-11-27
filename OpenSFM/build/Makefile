@@ -138,6 +138,30 @@ Demo.cpp.s:
 	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/Demo.cpp.s
 .PHONY : Demo.cpp.s
 
+GeometryFunctions.o: GeometryFunctions.cpp.o
+.PHONY : GeometryFunctions.o
+
+# target to build an object file
+GeometryFunctions.cpp.o:
+	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o
+.PHONY : GeometryFunctions.cpp.o
+
+GeometryFunctions.i: GeometryFunctions.cpp.i
+.PHONY : GeometryFunctions.i
+
+# target to preprocess a source file
+GeometryFunctions.cpp.i:
+	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.i
+.PHONY : GeometryFunctions.cpp.i
+
+GeometryFunctions.s: GeometryFunctions.cpp.s
+.PHONY : GeometryFunctions.s
+
+# target to generate assembly for a file
+GeometryFunctions.cpp.s:
+	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.s
+.PHONY : GeometryFunctions.cpp.s
+
 OpenSfM.o: OpenSfM.cpp.o
 .PHONY : OpenSfM.o
 
@@ -174,6 +198,9 @@ help:
 	@echo "... Demo.o"
 	@echo "... Demo.i"
 	@echo "... Demo.s"
+	@echo "... GeometryFunctions.o"
+	@echo "... GeometryFunctions.i"
+	@echo "... GeometryFunctions.s"
 	@echo "... OpenSfM.o"
 	@echo "... OpenSfM.i"
 	@echo "... OpenSfM.s"

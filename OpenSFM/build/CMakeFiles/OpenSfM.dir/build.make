@@ -52,9 +52,32 @@ include CMakeFiles/OpenSfM.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/OpenSfM.dir/flags.make
 
+CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o: CMakeFiles/OpenSfM.dir/flags.make
+CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o: ../GeometryFunctions.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o -c /home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.cpp
+
+CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.cpp > CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.i
+
+CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.cpp -o CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.s
+
+CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.requires:
+.PHONY : CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.requires
+
+CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.provides: CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.requires
+	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.provides.build
+.PHONY : CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.provides
+
+CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.provides.build: CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o
+
 CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o: CMakeFiles/OpenSfM.dir/flags.make
 CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o: ../OpenSfM.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o -c /home/eric/Documents/OpenSLAM/OpenSFM/OpenSfM.cpp
 
@@ -77,7 +100,7 @@ CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o.provides.build: CMakeFiles/OpenSfM.dir/Open
 
 CMakeFiles/OpenSfM.dir/Demo.cpp.o: CMakeFiles/OpenSfM.dir/flags.make
 CMakeFiles/OpenSfM.dir/Demo.cpp.o: ../Demo.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/OpenSfM.dir/Demo.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/Demo.cpp.o -c /home/eric/Documents/OpenSLAM/OpenSFM/Demo.cpp
 
@@ -100,12 +123,14 @@ CMakeFiles/OpenSfM.dir/Demo.cpp.o.provides.build: CMakeFiles/OpenSfM.dir/Demo.cp
 
 # Object files for target OpenSfM
 OpenSfM_OBJECTS = \
+"CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o" \
 "CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o" \
 "CMakeFiles/OpenSfM.dir/Demo.cpp.o"
 
 # External object files for target OpenSfM
 OpenSfM_EXTERNAL_OBJECTS =
 
+OpenSfM: CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o
 OpenSfM: CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o
 OpenSfM: CMakeFiles/OpenSfM.dir/Demo.cpp.o
 OpenSfM: CMakeFiles/OpenSfM.dir/build.make
@@ -151,6 +176,7 @@ OpenSfM: CMakeFiles/OpenSfM.dir/link.txt
 CMakeFiles/OpenSfM.dir/build: OpenSfM
 .PHONY : CMakeFiles/OpenSfM.dir/build
 
+CMakeFiles/OpenSfM.dir/requires: CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.requires
 CMakeFiles/OpenSfM.dir/requires: CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o.requires
 CMakeFiles/OpenSfM.dir/requires: CMakeFiles/OpenSfM.dir/Demo.cpp.o.requires
 .PHONY : CMakeFiles/OpenSfM.dir/requires

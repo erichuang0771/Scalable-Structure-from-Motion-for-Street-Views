@@ -5,6 +5,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/eric/Documents/OpenSLAM/OpenSFM/Demo.cpp" "/home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles/OpenSfM.dir/Demo.cpp.o"
+  "/home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.cpp" "/home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o"
   "/home/eric/Documents/OpenSLAM/OpenSFM/OpenSfM.cpp" "/home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
