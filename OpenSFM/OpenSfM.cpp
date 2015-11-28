@@ -302,11 +302,12 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		}
 	  	arma::fmat pose_B_rot( reinterpret_cast<float*>(Rot_B.data), Rot_B.rows, Rot_B.cols );
 	  	arma::fmat pose_B_trans( reinterpret_cast<float*>(trans_B.data), trans_B.rows, trans_B.cols );
-	  	arma::fmat tmp_pose_B = join_cols(pose_B_rot,pose_B_trans);
-	  	arma::fmat * pose_B = new arma::mat(tmp_pose_B);
+	  	arma::fmat tmp_pose_B = join_cols(pose_B_rot.t(),pose_B_trans.rows(0,2).t());
+	  	// arma::fmat * pose_B = new arma::fmat(3,4);
+	  	// *pose_B = tmp_pose_B.t();
 	  	
-	  	this->cameraPose->push_back(pose_B);
-	  	cout<<"camPose B: "<<*pose_B<<endl;
+	  	// this->cameraPose->push_back(pose_B);
+	  	// cout<<"camPose B: "<<*pose_B<<endl;
 
 	 // mat arma_mat( reinterpret_cast<double*>opencv_mat.data, opencv_mat.rows, opencv_mat.cols )
 
