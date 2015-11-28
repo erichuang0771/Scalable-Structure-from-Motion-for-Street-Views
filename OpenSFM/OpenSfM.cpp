@@ -189,9 +189,13 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  	create tables
 	   */
 	  int NUM = 0;
+	  vector< Point2f > P1_inliers, P2_inliers;
 	  for(unsigned i = 0; i < mask.rows; ++i) {
-	  	/* code */
-	  	if(mask.at<char>(i,0) == 1) NUM++;
+	  	/* extract inliears */
+	  	if(mask.at<char>(i,0) == 1){ NUM++;
+	  		P1_inliers.push_back(P1f[i]);
+	  		P2_inliers.push_back(P2f[i]);
+	  	}
 	  }
 
 
@@ -236,6 +240,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		*tmp_camProjTable  << 1 << 0 << 0 << 0 << arma::endr
 						   << 0 << 1 << 0 << 0 << arma::endr
 						   << 0 << 0 << 1 << 0;
+		this->camProjTable->push_back(tmp_camProjTable);
 		this->camProjTable->push_back(tmp_camProjTable);	
 
 		// solve projCam for the camB
@@ -249,11 +254,59 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		vector<arma::fmat> Projs_camB;
 		AllPossiblePFromF(fundamental_matrix, K, Projs_camB);
 		
+		Mat camP_A( 4, 3, CV_32FC1, (*camProjTable)[0]->memptr() ); camP_A = camP_A.t();
+		vector<Mat> point4D(4);
+			K.convertTo(K,CV_32FC1);
+			cout<<"Projs_camB size:"<<Projs_camB.size()<<endl;
+			int max_correct_pts = 0; int best_index = -1;
+		for(unsigned i = 0; i < Projs_camB.size(); ++i){
+			/* code */
+			int counter_correct_pts = 0;
+			Mat camP_B( 4, 3, CV_32FC1, Projs_camB[i].memptr() ); camP_B = camP_B.t();
+			triangulatePoints(camP_A,camP_B,P1_inliers,P1_inliers,point4D[i]);
+			cout<<"size of point4D:"<<endl<<point4D[i].cols<<endl<<point4D[i].rows<<endl;
 
-
-	 // camProjTable->push_back(new fmat);
+			convertPointsFromHomogeneous(point4D[i].t(),point4D[i]);
+			Mat tmo(point4D[i].rows,3,CV_32FC1);
+			for(unsigned x = 0; x < point4D[i].rows; ++x) {
+				/* fix openCV bug */
+				tmo.row(x) = point4D[i].row(x);
+				if(tmo.at<float>(x,2) > 0) counter_correct_pts++;
+			}
+			Mat one = Mat::ones(tmo.rows,1,CV_32FC1);
+			hconcat(tmo,one,point4D[i]);
+			Mat point4D_in_camB = K.inv()*camP_B*point4D[i].t();
+			for(unsigned x = 0; x < point4D_in_camB.cols; ++x) {
+				/* code */
+				if(point4D_in_camB.at<float>(2,x) > 0) counter_correct_pts++;
+			}
+			cout<<"counter_correct_pts: "<<counter_correct_pts<<" / "<< point4D[i].rows*2<<endl;
+			if(counter_correct_pts > max_correct_pts){
+				best_index = i;
+				max_correct_pts = counter_correct_pts;
+			}
+		}
+		arma::fmat *tmp_camProjTable_B = new arma::fmat(3,4); *tmp_camProjTable_B = Projs_camB[best_index];
+		this->camProjTable->push_back(tmp_camProjTable_B);
 	  
-	  
+	  	//handle poseTable
+		Mat camP_B( 4, 3, CV_32FC1, tmp_camProjTable_B->memptr() ); camP_B = camP_B.t();
+		Mat Rot_B, camProj, trans_B;
+		decomposeProjectionMatrix(camP_B,camProj,Rot_B,trans_B);
+		 cout<<"depth of trans_B: "<<trans_B.size()<<endl;
+		// convertPointsFromHomogeneous(trans_B,trans_B);
+		trans_B = trans_B/trans_B.at<float>(0,3);
+		if(DEBUG){
+			cout<<"Rot_B: "<<Rot_B<<endl
+				<<"trans_B: "<<trans_B<<endl;
+		}
+	  	arma::fmat pose_B_rot( reinterpret_cast<float*>(Rot_B.data), Rot_B.rows, Rot_B.cols );
+	  	arma::fmat pose_B_trans( reinterpret_cast<float*>(trans_B.data), trans_B.rows, trans_B.cols );
+	  	arma::fmat tmp_pose_B = join_cols(pose_B_rot,pose_B_trans);
+	  	arma::fmat * pose_B = new arma::mat(tmp_pose_B);
+	  	
+	  	this->cameraPose->push_back(pose_B);
+	  	cout<<"camPose B: "<<*pose_B<<endl;
 
 	 // mat arma_mat( reinterpret_cast<double*>opencv_mat.data, opencv_mat.rows, opencv_mat.cols )
 
