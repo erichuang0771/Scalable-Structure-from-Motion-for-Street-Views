@@ -11,6 +11,9 @@ int OpenSfM::run(string dir_images){
 
 	Mat imgA = imread(dir_images+"1.png", CV_LOAD_IMAGE_COLOR);
 	Mat imgB = imread(dir_images+"2.png", CV_LOAD_IMAGE_COLOR);
+	if( !imgA.data || !imgB.data){
+		cerr<<"no data!\n"<<endl;
+	}
 
 	if(DEBUG) {
 			cout<<"open img "<<dir_images+"1/2.png"<<endl;
