@@ -91,13 +91,16 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 
 	 int cnt = 0;
 	  for( int i = 0; i < descA.rows; i++ ){
-	   if( matches[i].distance <= max(5*min_dist, 0.02) ){
+	   if( matches[i].distance <= max(3*min_dist, 0.02) ){
 	   	 good_matches.push_back( matches[i]);
 	   	 test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
 	   	 P1.push_back(keypointA[matches[i].queryIdx]);
 	   	 P2.push_back(keypointB[matches[i].trainIdx]);
 	   	 P1f.push_back(keypointA[matches[i].queryIdx].pt);
 	   	 P2f.push_back(keypointB[matches[i].trainIdx].pt);
+	   	  // cout<<"P1: "<<P1.back().pt<<endl;
+	   	   // cout<<"P1f: "<<P1f.back()<<endl;
+	   	   // cout<<"P2f: "<<P2f.back()<<endl;
 	   	}
 	  }
 	  matches.clear();
@@ -133,12 +136,12 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  	and check Epolier line
 	   */
 	  Mat mask;
-	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, CV_FM_RANSAC, 3, 0.99, mask);
-	  
+	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, CV_FM_RANSAC , 0.001, 0.99, mask);
+	  cout<<"\nwhat???!"<<fundamental_matrix<<endl;
 	  if(DEBUG) {
 	  	/* code */
 	  	Mat Epilines;
-	  	computeCorrespondEpilines(Mat(P1f),1,fundamental_matrix,Epilines);
+	  	computeCorrespondEpilines(Mat(P2f),2,fundamental_matrix,Epilines);
 	  	cout<<"size of Epilines: "<<Epilines.rows<<" | "<<Epilines.cols<<endl;
 	  	cout<<"depth of Epilines: "<<Epilines.depth()<<endl;
 
@@ -251,7 +254,9 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		Mat K = Mat(3,3,CV_32FC1,(this->intrinsc_K).memptr());
 		K.convertTo(K,CV_64FC1);
 		K = K.t();
+		cout<<"fuck222\n";
 		if(DEBUG) cout<<" intrinsc_K : "<<K<<endl;
+		if(DEBUG) cout<<" FFF : "<<fundamental_matrix<<endl;
 
 		//Mat E = K.t()*fundamental_matrix*K;
 		vector<arma::fmat> Projs_camB;
@@ -305,11 +310,15 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		}
 	  	arma::fmat pose_B_rot( reinterpret_cast<float*>(Rot_B.data), Rot_B.rows, Rot_B.cols );
 	  	arma::fmat pose_B_trans( reinterpret_cast<float*>(trans_B.data), trans_B.rows, trans_B.cols );
-	  	arma::fmat tmp_pose_B = join_cols(pose_B_rot.t(),pose_B_trans.rows(0,2).t());
-	  	// arma::fmat * pose_B = new arma::fmat(3,4);
-	  	// *pose_B = tmp_pose_B.t();
+	  	arma::fmat tmp_pose_B = join_rows(pose_B_rot.t(),pose_B_trans.rows(0,2));
+	  	// cout<<tmp_pose_B.n_rows<<tmp_pose_B.n_cols<<endl;
+	  	// cout<<tmp_pose_B<<endl;
 	  	
-	  	// this->cameraPose->push_back(pose_B);
+	  	 arma::fmat * pose_B = new arma::fmat(3,4);
+	  	 *pose_B = tmp_pose_B.t();
+	  	
+	  	 this->cameraPose->push_back(pose_B);
+
 	  	// cout<<"camPose B: "<<*pose_B<<endl;
 
 	 // mat arma_mat( reinterpret_cast<double*>opencv_mat.data, opencv_mat.rows, opencv_mat.cols )

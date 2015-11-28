@@ -51,7 +51,7 @@ bool DecomposeEtoRandT(cv::Mat& E, arma::fmat& R1, arma::fmat& R2, arma::fmat& t
 	
 	//check if first and second singleuar value are the same (as they should be)
 	double singular_values_ratio = fabsf(svd.w.at<double>(0) / svd.w.at<double>(1) );
-	if(singular_values_ratio > 1) singular_values_ratio = 1.0/singular_values_ratio;// filp ration keep it [0,1]
+	if(singular_values_ratio > 1.0) singular_values_ratio = 1.0/singular_values_ratio;// filp ration keep it [0,1]
 	if(singular_values_ratio < 0.7) {
 		cout<<"singular values are too far away"<<endl;
 		return false;
@@ -70,7 +70,15 @@ bool DecomposeEtoRandT(cv::Mat& E, arma::fmat& R1, arma::fmat& R2, arma::fmat& t
 	 svd_u = svd_u.t();
 	 arma::mat svd_vt( reinterpret_cast<double*>(svd.vt.data), svd.vt.rows, svd.vt.cols );
 	 svd_vt = svd_vt.t();
-	 //cout<<svd_u<< endl <<W<< endl << svd_vt <<endl;
+	 cout<<"fuck!!!!!\n";
+	 //cout<<K<<endl;
+	 //cout<<svd_vt<< endl <<svd.vt<<endl;
+	 //
+	 if(det(svd_u*W*svd_vt) < 0){
+	 	W = -W;
+	 	Wt = -Wt;
+	 }
+	
 	arma::mat R1d = svd_u*W*svd_vt;
 	R1 = arma::conv_to<arma::fmat>::from(R1d);
 	arma::mat R2d = svd_u*Wt*svd_vt;
@@ -87,7 +95,7 @@ bool DecomposeEtoRandT(cv::Mat& E, arma::fmat& R1, arma::fmat& R2, arma::fmat& t
 
 bool checkRotationMatrix(arma::fmat& R){
 	if(fabsf(det(R) - 1.0) > 1e-07){
-		cerr<<"det(R) != +- 1.0, not valid rotation matrix"<<endl;
+		cerr<<"det(R) != +- 1.0, not valid rotation matrix: "<<det(R)<<endl;
 		return false;
 	}
 	return true;
