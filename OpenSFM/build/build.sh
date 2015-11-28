@@ -1,3 +1,3 @@
 #!/bin/sh
 make
-./OpenSfM ../../data/template/templeR000
+./OpenSfM ../config.ini

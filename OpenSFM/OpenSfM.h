@@ -42,6 +42,14 @@ public:
 	std::vector<unsigned>* Z_j;
 	std::vector<unsigned>* Z_v;
 
+bool loadParas(std::string dir);
+/* Yilin Yang
+	load intrinsc K and all thresholds....from configure txt file	
+	input: unsure
+	output: 1 if succcess
+		   0 if error
+ */
+
 int run(std::string dir_images);
 /* run structure from motion
 	input: read from string
@@ -50,13 +58,6 @@ int run(std::string dir_images);
 
 private:
 
-bool loadParas(std::string dir);
-/* Yilin Yang
-	load intrinsc K and all thresholds....from configure txt file	
-	input: unsure
-	output: 1 if succcess
-		   0 if error
- */
 int multiViewTriangulation(arma::umat& index , cv::Mat& ims);
 /* Yilin Yang
 	update 3d points in feature table that viewed by at least three camseras
