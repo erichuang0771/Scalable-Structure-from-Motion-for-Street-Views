@@ -4,19 +4,18 @@
 using namespace std;
 using namespace cv;
 
-int OpenSfM::run(string dir_images){
+int OpenSfM::run(){
 	// dir should be dir of images, while for now, we just load two images
 	// 
 	cout<<"start to run OpenSfM........."<<endl<<endl;
 
-	Mat imgA = imread(dir_images+"1.png", CV_LOAD_IMAGE_COLOR);
-	Mat imgB = imread(dir_images+"2.png", CV_LOAD_IMAGE_COLOR);
+	Mat imgA = this->images[0];
+	Mat imgB = this->images[1];
 	if( !imgA.data || !imgB.data){
 		cerr<<"no data!\n"<<endl;
 	}
 
 	if(DEBUG) {
-			cout<<"open img "<<dir_images+"1/2.png"<<endl;
 			Mat H; hconcat(imgA,imgB,H);
 			imshow("initial two view",H);
 			waitKey(0);
@@ -24,7 +23,6 @@ int OpenSfM::run(string dir_images){
 
 
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-
 
 	return 0;
 }
@@ -91,7 +89,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 
 	 int cnt = 0;
 	  for( int i = 0; i < descA.rows; i++ ){
-	   if( matches[i].distance <= max(3*min_dist, 0.02) ){
+	   if( matches[i].distance <= max(this->min_dist*min_dist, 0.02) ){
 	   	 good_matches.push_back( matches[i]);
 	   	 test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
 	   	 P1.push_back(keypointA[matches[i].queryIdx]);

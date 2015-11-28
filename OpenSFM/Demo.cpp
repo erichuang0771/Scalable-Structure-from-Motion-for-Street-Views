@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
    //if((tester->images)[0].data)
    //	cv::imshow("fafas", (tester->images)[0]);
 	//waitKey(0);
-   //tester->run();
+   tester->run();
    return 0;
    
 

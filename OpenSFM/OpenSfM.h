@@ -37,6 +37,7 @@ public:
 	arma::fmat intrinsc_K;
 	int min_dist;
 	std::vector<cv::Mat> images;
+
 	cv::Mat* featureTable;
 	std::vector<arma::fmat*>* camProjTable;
 	std::vector<arma::umat*>* featureCell; //two dim vecctor
@@ -54,7 +55,7 @@ bool loadParas(std::string dir);
 		   0 if error
  */
 
-int run(std::string dir_images);
+int run();
 /* run structure from motion
 	input: read from string
 	output: 1 success and 0 fails
