@@ -8,5 +8,5 @@ ADD_DEFINITIONS(
 	-std=c++11
 )
 
-add_executable( OpenSfM GeometryFunctions.cpp OpenSfM.cpp Demo.cpp )
+add_executable( OpenSfM GeometryFunctions.cpp utils.cpp OpenSfM.cpp Demo.cpp )
 target_link_libraries( OpenSfM ${OpenCV_LIBS} ${ARMADILLO_LIBRARIES})

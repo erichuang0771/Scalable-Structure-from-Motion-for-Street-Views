@@ -50,7 +50,7 @@ int run(std::string dir_images);
 
 private:
 
-int loadParas();
+bool loadParas(std::string dir);
 /* Yilin Yang
 	load intrinsc K and all thresholds....from configure txt file	
 	input: unsure

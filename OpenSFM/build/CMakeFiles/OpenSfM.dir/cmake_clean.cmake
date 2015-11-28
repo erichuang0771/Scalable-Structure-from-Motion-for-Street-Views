@@ -1,5 +1,6 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o"
+  "CMakeFiles/OpenSfM.dir/utils.cpp.o"
   "CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o"
   "CMakeFiles/OpenSfM.dir/Demo.cpp.o"
   "OpenSfM.pdb"

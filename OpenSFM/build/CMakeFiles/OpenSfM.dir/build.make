@@ -34,14 +34,11 @@ RM = /usr/bin/cmake -E remove -f
 # Escaping for special characters.
 EQUALS = =
 
-# The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/bin/ccmake
-
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/eric/Documents/OpenSLAM/OpenSFM
+CMAKE_SOURCE_DIR = /home/allen/Documents/cpp/OpenSLAM/OpenSFM
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/eric/Documents/OpenSLAM/OpenSFM/build
+CMAKE_BINARY_DIR = /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/OpenSfM.dir/depend.make
@@ -54,17 +51,17 @@ include CMakeFiles/OpenSfM.dir/flags.make
 
 CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o: CMakeFiles/OpenSfM.dir/flags.make
 CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o: ../GeometryFunctions.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o -c /home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o -c /home/allen/Documents/cpp/OpenSLAM/OpenSFM/GeometryFunctions.cpp
 
 CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.cpp > CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/allen/Documents/cpp/OpenSLAM/OpenSFM/GeometryFunctions.cpp > CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.i
 
 CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/eric/Documents/OpenSLAM/OpenSFM/GeometryFunctions.cpp -o CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/allen/Documents/cpp/OpenSLAM/OpenSFM/GeometryFunctions.cpp -o CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.s
 
 CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.requires:
 .PHONY : CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.requires
@@ -75,19 +72,42 @@ CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.provides: CMakeFiles/OpenSfM.dir/
 
 CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.provides.build: CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o
 
+CMakeFiles/OpenSfM.dir/utils.cpp.o: CMakeFiles/OpenSfM.dir/flags.make
+CMakeFiles/OpenSfM.dir/utils.cpp.o: ../utils.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/OpenSfM.dir/utils.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/utils.cpp.o -c /home/allen/Documents/cpp/OpenSLAM/OpenSFM/utils.cpp
+
+CMakeFiles/OpenSfM.dir/utils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OpenSfM.dir/utils.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/allen/Documents/cpp/OpenSLAM/OpenSFM/utils.cpp > CMakeFiles/OpenSfM.dir/utils.cpp.i
+
+CMakeFiles/OpenSfM.dir/utils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OpenSfM.dir/utils.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/allen/Documents/cpp/OpenSLAM/OpenSFM/utils.cpp -o CMakeFiles/OpenSfM.dir/utils.cpp.s
+
+CMakeFiles/OpenSfM.dir/utils.cpp.o.requires:
+.PHONY : CMakeFiles/OpenSfM.dir/utils.cpp.o.requires
+
+CMakeFiles/OpenSfM.dir/utils.cpp.o.provides: CMakeFiles/OpenSfM.dir/utils.cpp.o.requires
+	$(MAKE) -f CMakeFiles/OpenSfM.dir/build.make CMakeFiles/OpenSfM.dir/utils.cpp.o.provides.build
+.PHONY : CMakeFiles/OpenSfM.dir/utils.cpp.o.provides
+
+CMakeFiles/OpenSfM.dir/utils.cpp.o.provides.build: CMakeFiles/OpenSfM.dir/utils.cpp.o
+
 CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o: CMakeFiles/OpenSfM.dir/flags.make
 CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o: ../OpenSfM.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o -c /home/eric/Documents/OpenSLAM/OpenSFM/OpenSfM.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o -c /home/allen/Documents/cpp/OpenSLAM/OpenSFM/OpenSfM.cpp
 
 CMakeFiles/OpenSfM.dir/OpenSfM.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OpenSfM.dir/OpenSfM.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/eric/Documents/OpenSLAM/OpenSFM/OpenSfM.cpp > CMakeFiles/OpenSfM.dir/OpenSfM.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/allen/Documents/cpp/OpenSLAM/OpenSFM/OpenSfM.cpp > CMakeFiles/OpenSfM.dir/OpenSfM.cpp.i
 
 CMakeFiles/OpenSfM.dir/OpenSfM.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OpenSfM.dir/OpenSfM.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/eric/Documents/OpenSLAM/OpenSFM/OpenSfM.cpp -o CMakeFiles/OpenSfM.dir/OpenSfM.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/allen/Documents/cpp/OpenSLAM/OpenSFM/OpenSfM.cpp -o CMakeFiles/OpenSfM.dir/OpenSfM.cpp.s
 
 CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o.requires:
 .PHONY : CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o.requires
@@ -100,17 +120,17 @@ CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o.provides.build: CMakeFiles/OpenSfM.dir/Open
 
 CMakeFiles/OpenSfM.dir/Demo.cpp.o: CMakeFiles/OpenSfM.dir/flags.make
 CMakeFiles/OpenSfM.dir/Demo.cpp.o: ../Demo.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/OpenSfM.dir/Demo.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/Demo.cpp.o -c /home/eric/Documents/OpenSLAM/OpenSFM/Demo.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/OpenSfM.dir/Demo.cpp.o -c /home/allen/Documents/cpp/OpenSLAM/OpenSFM/Demo.cpp
 
 CMakeFiles/OpenSfM.dir/Demo.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OpenSfM.dir/Demo.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/eric/Documents/OpenSLAM/OpenSFM/Demo.cpp > CMakeFiles/OpenSfM.dir/Demo.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/allen/Documents/cpp/OpenSLAM/OpenSFM/Demo.cpp > CMakeFiles/OpenSfM.dir/Demo.cpp.i
 
 CMakeFiles/OpenSfM.dir/Demo.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OpenSfM.dir/Demo.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/eric/Documents/OpenSLAM/OpenSFM/Demo.cpp -o CMakeFiles/OpenSfM.dir/Demo.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/allen/Documents/cpp/OpenSLAM/OpenSFM/Demo.cpp -o CMakeFiles/OpenSfM.dir/Demo.cpp.s
 
 CMakeFiles/OpenSfM.dir/Demo.cpp.o.requires:
 .PHONY : CMakeFiles/OpenSfM.dir/Demo.cpp.o.requires
@@ -124,6 +144,7 @@ CMakeFiles/OpenSfM.dir/Demo.cpp.o.provides.build: CMakeFiles/OpenSfM.dir/Demo.cp
 # Object files for target OpenSfM
 OpenSfM_OBJECTS = \
 "CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o" \
+"CMakeFiles/OpenSfM.dir/utils.cpp.o" \
 "CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o" \
 "CMakeFiles/OpenSfM.dir/Demo.cpp.o"
 
@@ -131,43 +152,44 @@ OpenSfM_OBJECTS = \
 OpenSfM_EXTERNAL_OBJECTS =
 
 OpenSfM: CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o
+OpenSfM: CMakeFiles/OpenSfM.dir/utils.cpp.o
 OpenSfM: CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o
 OpenSfM: CMakeFiles/OpenSfM.dir/Demo.cpp.o
 OpenSfM: CMakeFiles/OpenSfM.dir/build.make
-OpenSfM: /usr/local/lib/libopencv_videostab.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_video.so.2.4.10
+OpenSfM: /usr/local/lib/libopencv_videostab.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_video.so.2.4.11
 OpenSfM: /usr/local/lib/libopencv_ts.a
-OpenSfM: /usr/local/lib/libopencv_superres.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_stitching.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_photo.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_ocl.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_objdetect.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_nonfree.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_ml.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_legacy.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_imgproc.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_highgui.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_gpu.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_flann.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_features2d.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_core.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_contrib.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_calib3d.so.2.4.10
+OpenSfM: /usr/local/lib/libopencv_superres.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_stitching.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_photo.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_ocl.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_objdetect.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_nonfree.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_ml.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_legacy.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_imgproc.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_highgui.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_gpu.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_flann.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_features2d.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_core.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_contrib.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_calib3d.so.2.4.11
 OpenSfM: /usr/lib/libarmadillo.so
-OpenSfM: /usr/local/lib/libopencv_nonfree.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_ocl.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_gpu.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_photo.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_objdetect.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_legacy.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_video.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_ml.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_calib3d.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_features2d.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_highgui.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_imgproc.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_flann.so.2.4.10
-OpenSfM: /usr/local/lib/libopencv_core.so.2.4.10
+OpenSfM: /usr/local/lib/libopencv_nonfree.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_ocl.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_gpu.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_photo.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_objdetect.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_legacy.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_video.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_ml.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_calib3d.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_features2d.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_highgui.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_imgproc.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_flann.so.2.4.11
+OpenSfM: /usr/local/lib/libopencv_core.so.2.4.11
 OpenSfM: CMakeFiles/OpenSfM.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable OpenSfM"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/OpenSfM.dir/link.txt --verbose=$(VERBOSE)
@@ -177,6 +199,7 @@ CMakeFiles/OpenSfM.dir/build: OpenSfM
 .PHONY : CMakeFiles/OpenSfM.dir/build
 
 CMakeFiles/OpenSfM.dir/requires: CMakeFiles/OpenSfM.dir/GeometryFunctions.cpp.o.requires
+CMakeFiles/OpenSfM.dir/requires: CMakeFiles/OpenSfM.dir/utils.cpp.o.requires
 CMakeFiles/OpenSfM.dir/requires: CMakeFiles/OpenSfM.dir/OpenSfM.cpp.o.requires
 CMakeFiles/OpenSfM.dir/requires: CMakeFiles/OpenSfM.dir/Demo.cpp.o.requires
 .PHONY : CMakeFiles/OpenSfM.dir/requires
@@ -186,6 +209,6 @@ CMakeFiles/OpenSfM.dir/clean:
 .PHONY : CMakeFiles/OpenSfM.dir/clean
 
 CMakeFiles/OpenSfM.dir/depend:
-	cd /home/eric/Documents/OpenSLAM/OpenSFM/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/eric/Documents/OpenSLAM/OpenSFM /home/eric/Documents/OpenSLAM/OpenSFM /home/eric/Documents/OpenSLAM/OpenSFM/build /home/eric/Documents/OpenSLAM/OpenSFM/build /home/eric/Documents/OpenSLAM/OpenSFM/build/CMakeFiles/OpenSfM.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/allen/Documents/cpp/OpenSLAM/OpenSFM /home/allen/Documents/cpp/OpenSLAM/OpenSFM /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build /home/allen/Documents/cpp/OpenSLAM/OpenSFM/build/CMakeFiles/OpenSfM.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/OpenSfM.dir/depend
 
