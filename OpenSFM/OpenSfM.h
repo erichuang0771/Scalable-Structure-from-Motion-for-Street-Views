@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <stdlib.h>
 #include <cstdlib>
 #include <sys/types.h>
@@ -33,6 +35,8 @@ class OpenSfM{
 
 public:
 	arma::fmat intrinsc_K;
+	int min_dist;
+	std::vector<cv::Mat> images;
 	cv::Mat* featureTable;
 	std::vector<arma::fmat*>* camProjTable;
 	std::vector<arma::umat*>* featureCell; //two dim vecctor
