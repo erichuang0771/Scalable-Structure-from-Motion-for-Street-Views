@@ -46,11 +46,12 @@ int main(int argc, char** argv) {
   //
    OpenSfM* tester = new OpenSfM();
    tester->loadParas(argv[1]);
+/*
    string hehe = "heehhehe";
    tester->intrinsc_K << 1520.4 << 0      << 302.32 << arma::endr
                      << 0      << 1525.9 << 246.87 <<arma::endr
                      << 0      << 0      << 1      ;
-   tester->run(argv[1]);
+   tester->run(argv[1]);*/
    return 0;
    
 
