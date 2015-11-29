@@ -134,12 +134,13 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  	and check Epolier line
 	   */
 	  Mat mask;
-	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, CV_FM_8POINT  , 0.0001, 0.99, mask);
+	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, FM_RANSAC, 0.1, 0.99, mask);
+
 	  cout<<"\nwhat???!"<<fundamental_matrix<<endl;
 	  if(DEBUG) {
 	  	/* code */
 	  	Mat Epilines;
-	  	computeCorrespondEpilines(Mat(P2f),2,fundamental_matrix,Epilines);
+	  	computeCorrespondEpilines(Mat(P1f),1,fundamental_matrix,Epilines);
 	  	cout<<"size of Epilines: "<<Epilines.rows<<" | "<<Epilines.cols<<endl;
 	  	cout<<"depth of Epilines: "<<Epilines.depth()<<endl;
 
@@ -302,7 +303,8 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 				max_correct_pts = counter_correct_pts;
 			}
 		}
-		cout<<"best index: "<<best_index<<endl;
+		// best_index = 2;
+		cout<<"best index: "<<best_index<<endl;  
 		arma::fmat *tmp_camProjTable_B = new arma::fmat(3,4); *tmp_camProjTable_B = Projs_camB[best_index];
 		this->camProjTable->push_back(tmp_camProjTable_B);
 	  
