@@ -134,7 +134,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  	and check Epolier line
 	   */
 	  Mat mask;
-	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, CV_FM_RANSAC , 0.001, 0.99, mask);
+	  Mat fundamental_matrix = findFundamentalMat(P1f, P2f, CV_FM_8POINT  , 0.0001, 0.99, mask);
 	  cout<<"\nwhat???!"<<fundamental_matrix<<endl;
 	  if(DEBUG) {
 	  	/* code */
@@ -149,7 +149,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		 Point3f bottom_horizontal = Point3f(0, 1, -imA.rows); 
 		 Point3f right_vertical =    Point3f(1, 0, -imA.cols); 
 
-	  	Mat Epilines_show = imA;
+	  	Mat Epilines_show = imB;
 	 	for(int i = 0; i < Epilines.rows; i++){
 	 		Point2f A;
 	 		Point2f B;
@@ -184,7 +184,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	 		// cout<<"point: "<<x<<"  "<<y<<endl;
 	 	}
 	 	Mat Epilines_show_pts;
-	 	drawKeypoints( Epilines_show, P1, Epilines_show_pts, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
+	 	drawKeypoints( Epilines_show, P2, Epilines_show_pts, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
 	 	imshow("Epilines_show",Epilines_show_pts);
 	 	waitKey(0);
 	  }
@@ -244,8 +244,9 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		*tmp_camProjTable  << 1 << 0 << 0 << 0 << arma::endr
 						   << 0 << 1 << 0 << 0 << arma::endr
 						   << 0 << 0 << 1 << 0;
+		*tmp_camProjTable = (this->intrinsc_K)*(*tmp_camProjTable);
 		this->camProjTable->push_back(tmp_camProjTable);
-		this->camProjTable->push_back(tmp_camProjTable);	
+		//this->camProjTable->push_back(tmp_camProjTable);	
 
 		// solve projCam for the camB
 		
@@ -259,6 +260,11 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		//Mat E = K.t()*fundamental_matrix*K;
 		vector<arma::fmat> Projs_camB;
 		AllPossiblePFromF(fundamental_matrix, K, Projs_camB);
+
+		for(unsigned i = 0; i < Projs_camB.size(); ++i) {
+			/* code */
+			Projs_camB[i] = (this->intrinsc_K)*Projs_camB[i];
+		}
 		
 		Mat camP_A( 4, 3, CV_32FC1, (*camProjTable)[0]->memptr() ); camP_A = camP_A.t();
 		vector<Mat> point4D(4);
@@ -269,19 +275,23 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 			/* code */
 			int counter_correct_pts = 0;
 			Mat camP_B( 4, 3, CV_32FC1, Projs_camB[i].memptr() ); camP_B = camP_B.t();
-			triangulatePoints(camP_A,camP_B,P1_inliers,P1_inliers,point4D[i]);
+			triangulatePoints(camP_A,camP_B,P1_inliers,P2_inliers,point4D[i]);
 			cout<<"size of point4D:"<<endl<<point4D[i].cols<<endl<<point4D[i].rows<<endl;
 
 			convertPointsFromHomogeneous(point4D[i].t(),point4D[i]);
+						cout<<"\n"<<point4D[i]<<"\n";
+
 			Mat tmo(point4D[i].rows,3,CV_32FC1);
 			for(unsigned x = 0; x < point4D[i].rows; ++x) {
 				/* fix openCV bug */
 				tmo.row(x) = point4D[i].row(x);
-				if(tmo.at<float>(x,2) > 0) counter_correct_pts++;
+				if(point4D[i].at<float>(x,2) > 0) counter_correct_pts++;
 			}
 			Mat one = Mat::ones(tmo.rows,1,CV_32FC1);
 			hconcat(tmo,one,point4D[i]);
 			Mat point4D_in_camB = K.inv()*camP_B*point4D[i].t();
+						//cout<<"\n"<<point4D_in_camB<<"\n";
+
 			for(unsigned x = 0; x < point4D_in_camB.cols; ++x) {
 				/* code */
 				if(point4D_in_camB.at<float>(2,x) > 0) counter_correct_pts++;
@@ -292,6 +302,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 				max_correct_pts = counter_correct_pts;
 			}
 		}
+		cout<<"best index: "<<best_index<<endl;
 		arma::fmat *tmp_camProjTable_B = new arma::fmat(3,4); *tmp_camProjTable_B = Projs_camB[best_index];
 		this->camProjTable->push_back(tmp_camProjTable_B);
 	  
@@ -300,6 +311,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		Mat Rot_B, camProj, trans_B;
 		decomposeProjectionMatrix(camP_B,camProj,Rot_B,trans_B);
 		 cout<<"depth of trans_B: "<<trans_B.size()<<endl;
+		 cout<<"computed intrinsc_K: "<<camProj<<endl;
 		// convertPointsFromHomogeneous(trans_B,trans_B);
 		trans_B = trans_B/trans_B.at<float>(0,3);
 		if(DEBUG){
