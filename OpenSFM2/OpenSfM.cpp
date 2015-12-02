@@ -7,7 +7,6 @@ using namespace cv;
 
 int OpenSfM::run(){
 	// dir should be dir of images, while for now, we just load two images
-	//
 	cout<<"start to run OpenSfM........."<<endl<<endl;
 
 	Mat imgA = this->images[0];
@@ -21,9 +20,9 @@ int OpenSfM::run(){
 			waitKey(0);
 	}
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
+	last_frame* next_f = updateStruture(images[2],last_f);
 	return 0;
 }
-
 
 
 last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
@@ -422,5 +421,15 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		(last_f->length).row(i) = sqrt(point4D_(i,0)*point4D_(i,0) + point4D_(i,1)*point4D_(i,1) + point4D_(i,2)*point4D_(i,2));
 	}
 	cout<<"initalTwoViewRecon done\n";
+	if(!DEBUG){
+		// cout<<"last_f->features: \n"<<last_f->features<<endl;
+		// cout<<"last_f->decs: \n"<<last_f->decs<<endl;
+		// cout<<"last_f->length: \n"<<last_f->length<<endl;
+	}
 	return last_f;
+	}
+
+last_frame* OpenSfM::updateStruture(cv::Mat& ims, last_frame* last_frame ){
+		std::cout << "connected updateStruture!..." << std::endl;
+		
 	}

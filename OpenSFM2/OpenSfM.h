@@ -71,7 +71,7 @@ int multiViewTriangulation(arma::umat& index , cv::Mat& ims);
 	ouput: 1 if succcess
 		   0 if error
  */
-last_frame* updateStruture(cv::Mat& ims, last_frame& last_frame );
+last_frame* updateStruture(cv::Mat& ims, last_frame* last_frame );
 /*  Eric Huang & Yilin Yang
 	write new data into all tables and compute camera R and T
 	input: ims: new image that going to estimates
