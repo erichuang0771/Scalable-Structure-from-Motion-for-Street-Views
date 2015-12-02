@@ -20,7 +20,7 @@ int OpenSfM::run(){
 			waitKey(0);
 	}
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-	last_frame* next_f = updateStruture(images[2],last_f);
+	last_frame* next_f = updateStruture(images[2],last_f, imgB);
 	return 0;
 }
 
@@ -67,7 +67,8 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
   	/* Setp 4 Good match
   	 Quick calculation of max and min distances between keypoints
   	 */
-	  for( int i = 0; i < descA.rows; i++ ){
+		 //*here used to be descA.rows
+	  for( int i = 0; i < matches.size(); i++ ){
 	  	 double dist = matches[i].distance;
 	    if( dist < min_dist ) min_dist = dist;
 	    if( dist > max_dist ) max_dist = dist;
@@ -78,7 +79,8 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	 vector< Point2f > P1f, P2f;
 
 	 int cnt = 0;
-	  for( int i = 0; i < descA.rows; i++ ){
+	 //*here used to be descA.rows
+	  for( int i = 0; i < matches.size(); i++ ){
 	   if( matches[i].distance <= max(this->min_dist*min_dist, 0.02) ){
 	   	 good_matches.push_back( matches[i]);
 	   	 test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
@@ -405,7 +407,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	*/
 
 	last_frame* last_f = new last_frame;
-	last_f->features = point2DB;
+	last_f->features = P1in;
 	last_f->decs = Mat(P1_inliers.size(),128,descB_candidate.depth());
 	cout<<"handle length!\n";
 	int ccnt = 0;
@@ -429,7 +431,85 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	return last_f;
 	}
 
-last_frame* OpenSfM::updateStruture(cv::Mat& ims, last_frame* last_frame ){
+last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& debug_im ){
 		std::cout << "connected updateStruture!..." << std::endl;
-		
+		/*  STEP 1
+			Detect SIFT Feature
+		 */
+		SiftFeatureDetector detector;
+	 	vector<KeyPoint> keypointC;
+	 	detector.detect(imC,keypointC);
+		/*  STEP 2
+			Extract SIFT desc
+		 */
+		 SiftDescriptorExtractor extractor;
+		 Mat descC;
+		 extractor.compute(imC,keypointC,descC);
+		 /*-- Step 3:
+	 		Matching descriptor vectors using FLANN matcher
+	 	*/
+		FlannBasedMatcher matcher;
+		vector< DMatch > matches;
+		matcher.match( last_f->decs, descC, matches );
+		/* Setp 4 Good match
+		 Quick calculation of max and min distances between keypoints
+		 */
+		 cout<<"match size: "<<matches.size()<<endl;
+		 cout<<"descC size: "<<descC.rows<<endl;
+		 cout<<"last_f->features size: "<< (last_f->features).size()<<endl;
+		 cout<<"last_f->decs size: "<<(last_f->decs).rows<<endl;
+		double max_dist = 0; double min_dist = 100;
+		for( int i = 0; i < matches.size(); i++ ){
+			 double dist = matches[i].distance;
+			if( dist < min_dist ) min_dist = dist;
+			if( dist > max_dist ) max_dist = dist;
+		}
+
+		vector< DMatch > good_matches, test_matches;
+	  vector< KeyPoint >P1, P2;
+	  vector< Point2f > P1f, P2f;
+		std::cout << "here!!!!" << std::endl;
+
+		int cnt = 0;
+		 for( int i = 0; i < matches.size(); i++ ){
+			if( matches[i].distance <= max((this->min_dist)*min_dist, 0.02)){
+				good_matches.push_back(matches[i]);
+				test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
+				// std::cout << "/* queryIdx */ " << (last_f->features)[matches[i].queryIdx].pt << std::endl;
+				 P1.push_back( (last_f->features)[matches[i].queryIdx] );
+				 P2.push_back(keypointC[matches[i].trainIdx]);
+				 P1f.push_back((last_f->features)[matches[i].queryIdx].pt);
+				 P2f.push_back(keypointC[matches[i].trainIdx].pt);
+			 }
+		 }
+		 std::cout << "done!!!!" << std::endl;
+
+		Mat descC_candidate(good_matches.size(),128,descC.depth());
+	 	for (size_t i = 0; i < good_matches.size(); i++) {
+	 		/* prepare descB_candidate for last_frame */
+	 	 descC.row(good_matches[i].trainIdx).copyTo(descC_candidate.row(i));
+	 	}
+		matches.clear();
+		//draw good match!
+		if(DEBUG) {
+	  	/* code */
+	  	printf("-- Max dist : %f \n", max_dist );
+  		printf("-- Min dist : %f \n", min_dist );
+  		Mat img_matches;
+  		drawMatches( debug_im, P1, imC, P2,
+               test_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
+               vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+ 	 	//-- Show detected matches
+  		imshow( "Good Matches", img_matches );
+  		cout<<"size of desc A: "<<(last_f->decs).rows<<" | "<<(last_f->decs).cols<<endl;
+  		cout<<"size of desc B: "<<descC.rows<<" | "<<descC.cols<<endl;
+  		cout<<"size of good matches: "<<good_matches.size()<<endl;
+  		waitKey(0);
+	  }
+	  P1.clear();
+	  P2.clear();
+	  keypointC.clear();
+
+
+
 	}

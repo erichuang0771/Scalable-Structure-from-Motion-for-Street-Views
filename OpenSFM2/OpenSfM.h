@@ -25,7 +25,7 @@
 #define DEBUG 1
 
 struct last_frame{
-			arma::fmat features;
+			std::vector<cv::KeyPoint> features;
 			cv::Mat decs;
 			arma::fmat length;
 };
@@ -71,7 +71,7 @@ int multiViewTriangulation(arma::umat& index , cv::Mat& ims);
 	ouput: 1 if succcess
 		   0 if error
  */
-last_frame* updateStruture(cv::Mat& ims, last_frame* last_frame );
+last_frame* updateStruture(cv::Mat& ims, last_frame* last_frame,cv::Mat& debug_im );
 /*  Eric Huang & Yilin Yang
 	write new data into all tables and compute camera R and T
 	input: ims: new image that going to estimates
