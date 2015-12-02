@@ -15,16 +15,12 @@ int OpenSfM::run(){
 	if( !imgA.data || !imgB.data){
 		cerr<<"no data!\n"<<endl;
 	}
-
 	if(DEBUG) {
 			Mat H; hconcat(imgA,imgB,H);
 			imshow("initial two view",H);
 			waitKey(0);
 	}
-
-
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-
 	return 0;
 }
 
@@ -40,26 +36,21 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	detector.detect(imA,keypointA);
 	detector.detect(imB,keypointB);
 
-	if(DEBUG) {
+	if(!DEBUG) {
 		/* code */
 		 Mat img_keypoints_1; Mat img_keypoints_2;
-
  		 drawKeypoints( imA, keypointA, img_keypoints_1, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
-  		 drawKeypoints( imB, keypointB, img_keypoints_2, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
-
+  	 drawKeypoints( imB, keypointB, img_keypoints_2, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
  		 //-- Show detected (drawn) keypoints
  		 imshow("Keypoints 1", img_keypoints_1 );
  		 imshow("Keypoints 2", img_keypoints_2 );
-
  		 waitKey(0);
 	}
 
 	/*  STEP 2
 		Extract SIFT desc
 	 */
-
 	SiftDescriptorExtractor extractor;
-
 	Mat descA, descB;
 	extractor.compute(imA,keypointA,descA);
 	extractor.compute(imB,keypointB,descB);
@@ -96,23 +87,18 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	   	 P2.push_back(keypointB[matches[i].trainIdx]);
 	   	 P1f.push_back(keypointA[matches[i].queryIdx].pt);
 	   	 P2f.push_back(keypointB[matches[i].trainIdx].pt);
-				 //    cout<<"P1: "<<P1.back().pt<<endl;
-					//     cout<<"P1f: "<<P1f.back()<<endl;
-	   	   // cout<<"P2f: "<<P2f.back()<<endl;
 	   	}
 	  }
 		Mat descB_candidate(good_matches.size(),128,descB.depth());
 		for (size_t i = 0; i < good_matches.size(); i++) {
-			/* code */
+			/* prepare descB_candidate for last_frame */
 		 descB.row(good_matches[i].trainIdx).copyTo(descB_candidate.row(i));
 		}
-
-
 
 	  matches.clear();
 
 
-	  if(DEBUG) {
+	  if(!DEBUG) {
 	  	/* code */
 	  	printf("-- Max dist : %f \n", max_dist );
   		printf("-- Min dist : %f \n", min_dist );
@@ -120,22 +106,17 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
   		drawMatches( imA, P1, imB, P2,
                test_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
                vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
-
  	 	//-- Show detected matches
   		imshow( "Good Matches", img_matches );
-
   		cout<<"size of desc A: "<<descA.rows<<" | "<<descA.cols<<endl;
   		cout<<"size of desc B: "<<descB.rows<<" | "<<descB.cols<<endl;
   		cout<<"size of good matches: "<<good_matches.size()<<endl;
-
   		waitKey(0);
-
 	  }
-	  //P1.clear();
-	  //P2.clear();
+	  P1.clear();
+	  P2.clear();
 	  keypointA.clear();
 	  keypointB.clear();
-
 
 
 	  /* STEP 5  get F matrix
@@ -150,23 +131,21 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		cout<<"**********************\n"<<fundamental_matrix<<"*********************\n";
 
 
-		if (DEBUG) {
-			/* code */
+		if (!DEBUG) {
+			/* save fundamental_matrix */
 			arma::mat F_saved(reinterpret_cast<double*>(fundamental_matrix.data),fundamental_matrix.rows,fundamental_matrix.cols);
 			F_saved = F_saved.t();
 			F_saved.save("fundamental_matrix_from_p1f_p2f.mat", arma::raw_ascii);
 		}
 
-	  cout<<"\nwhat???!"<<fundamental_matrix<<endl;
 	  if(DEBUG) {
-	  	/* code */
+	  	/* draw epolir line */
 	  	Mat Epilines;
 	  	computeCorrespondEpilines(Mat(P1f),1,fundamental_matrix,Epilines);
-	  	cout<<"size of Epilines: "<<Epilines.rows<<" | "<<Epilines.cols<<endl;
-	  	cout<<"depth of Epilines: "<<Epilines.depth()<<endl;
+	  	// cout<<"size of Epilines: "<<Epilines.rows<<" | "<<Epilines.cols<<endl;
+	  	// cout<<"depth of Epilines: "<<Epilines.depth()<<endl;
 
-	  	//float top_horizontal[3] =    {0, 1, 0};
-	  	 Point3f top_horizontal = Point3f(0,1,0);
+	   Point3f top_horizontal = Point3f(0,1,0);
 		 Point3f left_vertical  =   Point3f(1, 0, 0);
 		 Point3f bottom_horizontal = Point3f(0, 1, -imA.rows);
 		 Point3f right_vertical =    Point3f(1, 0, -imA.cols);
@@ -216,9 +195,9 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	   */
 	  int NUM = 0;
 	  vector< Point2f > P1_inliers, P2_inliers;
-std::vector<DMatch> test_inliear_match;
-std::vector<KeyPoint> P1in,P2in;
-int ccc = 0;
+		std::vector<DMatch> test_inliear_match;
+		std::vector<KeyPoint> P1in,P2in;
+		int ccc = 0;
 	  for(unsigned i = 0; i < mask.rows; ++i) {
 	  	/* extract inliears */
 	  	if(mask.at<char>(i,0) != 0){ NUM++;
@@ -231,15 +210,13 @@ int ccc = 0;
 	  }
 
 		if(DEBUG){
+			/* draw inliear matches*/
 			Mat inliears_match;
-
 			drawMatches( imA, P1in, imB, P2in,
 							 test_inliear_match, inliears_match, Scalar::all(-1), Scalar::all(-1),
 							 vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
 							 imshow("inilear_matches", inliears_match);waitKey(0);
 		}
-
-
 
 	  //handle featureTable;
 	  int num_of_feature = P1f.size();
@@ -270,13 +247,11 @@ int ccc = 0;
 	  		arma::umat* tmp_feature_per_cell = new arma::umat(2,2);
 	  		*tmp_feature_per_cell << P1f[i].x << P1f[i].y << arma::endr << P2f[i].x << P2f[i].y << arma::endr;
 	  		featureCell->push_back(tmp_feature_per_cell);
-
 		}
 		//3. init Z table;
 		//done when initilized
 
 		//4. init camProjTable
-
 		arma::fmat* tmp_camProjTable = new arma::fmat(3,4);
 		*tmp_camProjTable  << 1.0 << 0.0 << 0.0 << 0.0 << arma::endr
 						   			   << 0.0 << 1.0 << 0.0 << 0.0<< arma::endr
@@ -285,49 +260,44 @@ int ccc = 0;
 		// 				   << 0.9986 << -0.0127 << 0.0520 << -0.0242 << arma::endr
 		// 				   << 0.0488 << -0.1816 << -0.9822 << 0.5227;
 		arma::fmat* tmp_camPoseTable = new arma::fmat(3,4);
+		//copy [I 0] from Proj_1
 		*tmp_camPoseTable = *tmp_camProjTable;
 
 		this->cameraPose->push_back(tmp_camPoseTable);
 
 		*tmp_camProjTable = (this->intrinsc_K)*(*tmp_camProjTable);
 		this->camProjTable->push_back(tmp_camProjTable);
-		//this->camProjTable->push_back(tmp_camProjTable);
 
 		// solve projCam for the camB
-
 		Mat K = Mat(3,3,CV_32FC1,(this->intrinsc_K).memptr());
 		K.convertTo(K,CV_64FC1);
 		K = K.t();
-		cout<<"fuck222\n";
-		if(DEBUG) cout<<" intrinsc_K : "<<K<<endl;
-		if(DEBUG) cout<<" FFF : "<<fundamental_matrix<<endl;
+		// if(DEBUG) cout<<" intrinsc_K : "<<K<<endl;
+		// if(DEBUG) cout<<" FFF : "<<fundamental_matrix<<endl;
 
-		//Mat E = K.t()*fundamental_matrix*K;
 		vector<arma::fmat> Projs_camB;
 		AllPossiblePFromF(fundamental_matrix, K, Projs_camB);
 		arma::fmat cam2(3,4);
 
 		std::vector<arma::fmat> poseB;
 		for(unsigned i = 0; i < Projs_camB.size(); ++i) {
+			// pose*K to become Proj_B
 			poseB.push_back(Projs_camB[i]);
-			Projs_camB[i] = (this->intrinsc_K)*Projs_camB[i];//(this->intrinsc_K)*Projs_camB[i];
-
+			Projs_camB[i] = (this->intrinsc_K)*Projs_camB[i];
 		}
 
 		Mat camP_A( 4, 3, CV_32FC1, (*camProjTable)[0]->memptr() ); camP_A = camP_A.t();
 		vector<Mat> point4D(4);
 			K.convertTo(K,CV_32FC1);
-			cout<<"Projs_camB size:"<<Projs_camB.size()<<endl;
 			int max_correct_pts = 0; int best_index = -1;
-			 (*camProjTable)[0]->save("A_proj.mat",arma::raw_ascii);
+			if(!DEBUG) (*camProjTable)[0]->save("A_proj.mat",arma::raw_ascii);
 
 		for(unsigned i = 0; i < Projs_camB.size(); ++i){
-			/* code */
+			/* test each Projs_camB */
 			int counter_correct_pts = 0;
-		//	std::cout << "Projs_camB: " <<Projs_camB[i]<< std::endl;
 			Mat camP_B( 4, 3, CV_32FC1, Projs_camB[i].memptr() ); camP_B = camP_B.t();
 
-			if (~DEBUG) {
+			if (!DEBUG) {
 				/* code */
 				Projs_camB[i].save(to_string(i)+"proj.mat",arma::raw_ascii);
 
@@ -350,11 +320,9 @@ int ccc = 0;
 			triangulatePoints(camP_A,camP_B,P1_inliers,P2_inliers,point4D[i]);
 
 			arma::fmat point4Dsaved(reinterpret_cast<float*>(point4D[i].data), point4D[i].cols, point4D[i].rows );
-			point4Dsaved.save(to_string(i)+"point4Dsaved.mat",arma::raw_ascii);
-			// cout<<"***************"<<point4D[i].t()<<endl;
+			if(!DEBUG) point4Dsaved.save(to_string(i)+"point4Dsaved.mat",arma::raw_ascii);
 
 			convertPointsFromHomogeneous(point4D[i].t(),point4D[i]); // confirm it works and correct
-			// cout<<"********HOMO*******"<<point4D[i]<<endl;
 			cout<<"size of point4D:"<<endl<<point4D[i].rows<<endl<<point4D[i].cols<<endl;
 
 			Mat tmo(point4D[i].rows,3,CV_32FC1);
@@ -369,15 +337,13 @@ int ccc = 0;
 			Mat tmp_A2B;
 			tmo.copyTo(point4D[i]);
 			hconcat(tmo,one,tmp_A2B);
-			// cout<<"what K? "<<K<<endl;
+
 			Mat point4D_in_camB = K.inv()*camP_B*tmp_A2B.t();
 			point4D_in_camB = point4D_in_camB.t();
-						cout<<"size of point4D_in_B:"<<endl<<point4D_in_camB.rows<<endl<<point4D_in_camB.cols<<endl;
-						std::cout << "counter now:"<< counter_correct_pts << std::endl;
+
 			for(unsigned x = 0; x < point4D_in_camB.rows; ++x) {
 				/* code */
 				if(point4D_in_camB.at<float>(x,2) > 0) counter_correct_pts++;
-			//	else std::cout << "B<0"<< point4D_in_camB.row(x) << std::endl;
 			}
 			cout<<"counter_correct_pts: "<<counter_correct_pts<<" / "<< point4D[i].rows*2<<endl;
 			if(counter_correct_pts > max_correct_pts){
@@ -387,9 +353,12 @@ int ccc = 0;
 		}
 
 
-		// best_index = 2;
 		cout<<"best index: "<<best_index<<endl;
 		arma::fmat *tmp_camProjTable_B = new arma::fmat(3,4); *tmp_camProjTable_B = Projs_camB[best_index];
+		/*
+		push the second camProjection
+		*/
+
 		this->camProjTable->push_back(tmp_camProjTable_B);
 
 	  	//handle poseTable
@@ -399,12 +368,15 @@ int ccc = 0;
 			 if(DEBUG){
 				 cout<<"pose_B: "<<poseB[best_index]<<endl;
 			 }
-
+			 /*
+		 	push the second camPose
+		 	*/
 	  	  this->cameraPose->push_back(pose_B);
 
-	  //	cout<<"camPose B: "<<*pose_B<<endl;
+				/*
+					prepare BA
+				*/
 
-	 // mat arma_mat( reinterpret_cast<double*>opencv_mat.data, opencv_mat.rows, opencv_mat.cols )
 	 arma::fmat point2DA( P1_inliers.size() , 2 );
 	 arma::fmat point2DB( P1_inliers.size() , 2 );
 
@@ -415,13 +387,12 @@ int ccc = 0;
 	 	point2DB.at(i,0) = P2_inliers[i].x;
 	 	point2DB.at(i,1) = P2_inliers[i].y;
 	}
-	 cout<<"point4D: "<<point4D[best_index].rows<<endl;
 
 	 arma::fmat point4D_( reinterpret_cast<float*>(point4D[best_index].data), point4D[best_index].cols, point4D[best_index].rows );
 	 point4D_ = point4D_.t();
-
-	 cout<<"shabi: "<<point2DA.n_rows<<point2DB.n_rows<<point4D_.n_rows<<endl;
-	 cout<<"pose: "<<*(*cameraPose)[0]<<"\n pose: "<<*(*cameraPose)[1]<<endl;
+	 point4D_.save("final_pts.mat",arma::raw_ascii);
+	 cout<<"ready BA: "<<point2DA.n_rows<<point2DB.n_rows<<point4D_.n_rows<<endl;
+	//  cout<<"pose: "<<*(*cameraPose)[0]<<"\n pose: "<<*(*cameraPose)[1]<<endl;
 
 
 	//  local_bundle_adjustment( intrinsc_K,
@@ -430,7 +401,10 @@ int ccc = 0;
   //                           point2DA,
   //                           point2DB,
   //                           point4D_);
-	//handle last frame
+	/*
+			handle last frame
+	*/
+
 	last_frame* last_f = new last_frame;
 	last_f->features = point2DB;
 	last_f->decs = Mat(P1_inliers.size(),128,descB_candidate.depth());
@@ -442,12 +416,11 @@ int ccc = 0;
 			 	descB_candidate.row(i).copyTo((last_f->decs).row(ccnt)); ccnt++;
 			}
 	}
-	cout<<"done\n";
 	last_f->length = arma::fmat(P1_inliers.size(),1);
 	for (size_t i = 0; i < P1_inliers.size(); i++) {
-		/* code */
+		/* compute length */
 		(last_f->length).row(i) = sqrt(point4D_(i,0)*point4D_(i,0) + point4D_(i,1)*point4D_(i,1) + point4D_(i,2)*point4D_(i,2));
 	}
-
+	cout<<"initalTwoViewRecon done\n";
 	return last_f;
 	}

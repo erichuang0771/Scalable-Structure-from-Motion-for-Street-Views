@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/eric/Documents/Ceres/OpenSFM/BA.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/BA.h
 cmath
 -
 cstdio
@@ -14,25 +14,25 @@ cstdio
 iostream
 -
 ceres/ceres.h
-/home/eric/Documents/Ceres/OpenSFM/ceres/ceres.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/ceres/ceres.h
 ceres/rotation.h
-/home/eric/Documents/Ceres/OpenSFM/ceres/rotation.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/ceres/rotation.h
 armadillo
 -
 
-/home/eric/Documents/Ceres/OpenSFM/GeometryFunctions.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/GeometryFunctions.h
 stdio.h
 -
 iostream
 -
 opencv2/core/core.hpp
-/home/eric/Documents/Ceres/OpenSFM/opencv2/core/core.hpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/opencv2/core/core.hpp
 opencv2/features2d/features2d.hpp
-/home/eric/Documents/Ceres/OpenSFM/opencv2/features2d/features2d.hpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/opencv2/features2d/features2d.hpp
 opencv2/highgui/highgui.hpp
-/home/eric/Documents/Ceres/OpenSFM/opencv2/highgui/highgui.hpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/opencv2/highgui/highgui.hpp
 opencv2/calib3d/calib3d.hpp
-/home/eric/Documents/Ceres/OpenSFM/opencv2/calib3d/calib3d.hpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/opencv2/calib3d/calib3d.hpp
 opencv2/nonfree/features2d.hpp
 -
 opencv2/legacy/legacy.hpp
@@ -64,27 +64,27 @@ armadillo
 numeric
 -
 
-/home/eric/Documents/Ceres/OpenSFM/OpenSfM.cpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/OpenSfM.cpp
 OpenSfM.h
-/home/eric/Documents/Ceres/OpenSFM/OpenSfM.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/OpenSfM.h
 GeometryFunctions.h
-/home/eric/Documents/Ceres/OpenSFM/GeometryFunctions.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/GeometryFunctions.h
 BA.h
-/home/eric/Documents/Ceres/OpenSFM/BA.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/BA.h
 
-/home/eric/Documents/Ceres/OpenSFM/OpenSfM.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/OpenSfM.h
 stdio.h
 -
 iostream
 -
 opencv2/core/core.hpp
-/home/eric/Documents/Ceres/OpenSFM/opencv2/core/core.hpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/opencv2/core/core.hpp
 opencv2/features2d/features2d.hpp
-/home/eric/Documents/Ceres/OpenSFM/opencv2/features2d/features2d.hpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/opencv2/features2d/features2d.hpp
 opencv2/highgui/highgui.hpp
-/home/eric/Documents/Ceres/OpenSFM/opencv2/highgui/highgui.hpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/opencv2/highgui/highgui.hpp
 opencv2/calib3d/calib3d.hpp
-/home/eric/Documents/Ceres/OpenSFM/opencv2/calib3d/calib3d.hpp
+/home/eric/Documents/OpenSLAM/OpenSFM2/opencv2/calib3d/calib3d.hpp
 opencv2/nonfree/features2d.hpp
 -
 opencv2/legacy/legacy.hpp
