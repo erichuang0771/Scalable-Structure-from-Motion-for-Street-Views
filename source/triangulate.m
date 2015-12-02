@@ -25,4 +25,3 @@ error = zeros(size(p1,1),1);
     error = sum(error);
     P = p_;
 end
-
