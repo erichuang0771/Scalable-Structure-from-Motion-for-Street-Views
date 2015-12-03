@@ -442,6 +442,16 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	return last_f;
 	}
 
+
+
+
+
+
+
+
+
+
+
 last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& debug_im ){
 		std::cout << "\n\n\n\nconnected updateStruture!..." << std::endl;
 		/*  STEP 1
@@ -611,9 +621,9 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 			std::cout << "before....." << std::endl;
 				cout<<"featureTable size: "<<(this->featureTable)->rows<<" | "<<(this->featureTable)->cols<<endl;
 				cout<<"featureCell size: "<<(this->featureCell)->size()<<endl;
-				cout<<"Table Z_i size: "<<(this->Z_i)->size()/2<<endl;
-				cout<<"Table Z_j size: "<<(this->Z_j)->size()/2<<endl;
-				cout<<"Table Z_v size: "<<(this->Z_v)->size()/2<<endl;
+				cout<<"Table Z_i size: "<<(this->Z_i)->size()<<endl;
+				cout<<"Table Z_j size: "<<(this->Z_j)->size()<<endl;
+				cout<<"Table Z_v size: "<<(this->Z_v)->size()<<endl;
 		}
 		/*
 			UPDATE TABLES!!!
@@ -658,7 +668,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 					std::cout << "featureCell: "<< *(*(this->featureCell))[i] <<"\n"<< std::endl;
 				}
 		}
-
+		std::cout << "\n\n all_matches size(): "<< all_matches.size() << std::endl;
 		// assign Z table that has no match but may match in future frame
 		for (size_t i = 0; i < all_matches.size(); i++) {
 			/* code */
@@ -679,16 +689,22 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		if(DEBUG){
 				cout<<"featureTable size: "<<(this->featureTable)->rows<<" | "<<(this->featureTable)->cols<<endl;
 				cout<<"featureCell size: "<<(this->featureCell)->size()<<endl;
-				cout<<"Table Z_i size: "<<(this->Z_i)->size()/3<<endl;
-				cout<<"Table Z_j size: "<<(this->Z_j)->size()/3<<endl;
-				cout<<"Table Z_v size: "<<(this->Z_v)->size()/3<<endl;
+				cout<<"Table Z_i size: "<<(this->Z_i)->size()<<endl;
+				cout<<"Table Z_j size: "<<(this->Z_j)->size()<<endl;
+				cout<<"Table Z_v size: "<<(this->Z_v)->size()<<endl;
 		}
 
 		/*
 			UPDATE TABLES!!!
+			done
 		*/
+		std::cout << "update Tables done!\n" << std::endl;
+		arma::umat index_C(all_good_matches.size(),1);
+		for (size_t i = 0; i < all_good_matches.size(); i++) {
+					index_C(i,0) = all_good_matches[i].trainIdx;
+		}
 
-
+		multiViewTriangulation(index_C , imC);
 
 
 
