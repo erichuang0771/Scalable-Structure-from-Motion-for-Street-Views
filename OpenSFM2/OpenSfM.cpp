@@ -607,6 +607,14 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 			all_good_matches.queryIdx -> new view
 			all_good_matches.trainIdx -> big table
 		*/
+		if(DEBUG){
+			std::cout << "before....." << std::endl;
+				cout<<"featureTable size: "<<(this->featureTable)->rows<<" | "<<(this->featureTable)->cols<<endl;
+				cout<<"featureCell size: "<<(this->featureCell)->size()<<endl;
+				cout<<"Table Z_i size: "<<(this->Z_i)->size()/2<<endl;
+				cout<<"Table Z_j size: "<<(this->Z_j)->size()/2<<endl;
+				cout<<"Table Z_v size: "<<(this->Z_v)->size()/2<<endl;
+		}
 		/*
 			UPDATE TABLES!!!
 			Z tables
@@ -669,10 +677,11 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 			}
 		}
 		if(DEBUG){
-				cout<<"featureTable size: "<<(this->featureTable).rows<<" | "<<(this->featureTable).cols<<endl;
+				cout<<"featureTable size: "<<(this->featureTable)->rows<<" | "<<(this->featureTable)->cols<<endl;
 				cout<<"featureCell size: "<<(this->featureCell)->size()<<endl;
-				cout<<"featureCell size: "<<(this->featureCell)->size()<<endl;
-
+				cout<<"Table Z_i size: "<<(this->Z_i)->size()/3<<endl;
+				cout<<"Table Z_j size: "<<(this->Z_j)->size()/3<<endl;
+				cout<<"Table Z_v size: "<<(this->Z_v)->size()/3<<endl;
 		}
 
 		/*
