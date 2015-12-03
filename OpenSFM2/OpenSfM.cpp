@@ -446,12 +446,6 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 
 
 
-
-
-
-
-
-
 last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& debug_im ){
 		std::cout << "\n\n\n\nconnected updateStruture!..." << std::endl;
 		/*  STEP 1
@@ -559,11 +553,30 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		Rodrigues(rvec,rot);
 		Mat Pose_C(3,4,CV_64FC1); hconcat(rot,tvec,Pose_C);
 		Mat_K.convertTo(Mat_K,CV_64FC1);
-		// std::cout << "Pose_C.depth(): "<< Pose_C.depth() << std::endl;
+		arma::mat new_pose_C(reinterpret_cast<double*>(Pose_C.data), 4, 3);
+		new_pose_C = new_pose_C.t();
+		arma::fmat* new_pose_C_f = new arma::fmat(3,4);
+		*new_pose_C_f = arma::conv_to<arma::fmat>::from(new_pose_C);
+		(this->cameraPose)->push_back(new_pose_C_f);
+
+
+
+		//  std::cout << "Pose_C.depth(): "<< Pose_C.depth() << std::endl;
 		Mat Proj_C; Proj_C = Mat_K*Pose_C;
 		std::cout << "rot: "<< rot << std::endl;
 		std::cout << "tvec: "<< tvec << std::endl;
-	  // std::cout << "Pose_C: "<< Pose_C << std::endl;
+		 arma::mat new_proj_C(reinterpret_cast<double*>(Proj_C.data), 4, 3);
+		 new_proj_C = new_proj_C.t();
+		 arma::fmat* new_proj_C_f = new arma::fmat(3,4);
+		 *new_proj_C_f = arma::conv_to<arma::fmat>::from(new_proj_C);
+		 (this->camProjTable)->push_back(new_proj_C_f);
+
+		/*UPDATE
+		Projection & Pose table
+		*/
+		// arma::mat* new_pose_C = new arma::fmat(reinterpret_cast<double*>(Pose_C.data), 4, 3);
+		// *new_pose_C = new_pose_C->t();
+		// (this->camProjTable)->push_back(new_pose_C);
 
 		/* IMPORTANT
 			IF CAMPOSE SOLVED BY PNP IS NOT CORRECT OR WE CAN ALSO IMPLEMENT CAMERA POSE
@@ -692,8 +705,9 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				cout<<"Table Z_i size: "<<(this->Z_i)->size()<<endl;
 				cout<<"Table Z_j size: "<<(this->Z_j)->size()<<endl;
 				cout<<"Table Z_v size: "<<(this->Z_v)->size()<<endl;
+				cout<<"Table camPose size: "<<(this->cameraPose)->size()<<endl;
+				cout<<"Table camProjTable size: "<<(this->camProjTable)->size()<<endl;
 		}
-
 		/*
 			UPDATE TABLES!!!
 			done
@@ -704,7 +718,10 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 					index_C(i,0) = all_good_matches[i].trainIdx;
 		}
 
-		multiViewTriangulation(index_C , imC);
+		/*
+				continue when triangulation done
+		*/
+		// multiViewTriangulation(index_C , imC);
 
 
 
