@@ -721,7 +721,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		/*
 				continue when triangulation done
 		*/
-		// multiViewTriangulation(index_C , imC);
+		multiViewTriangulation(index_C , imC);
 
 
 
