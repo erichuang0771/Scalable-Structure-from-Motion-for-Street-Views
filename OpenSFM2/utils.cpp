@@ -1,5 +1,7 @@
 #include "OpenSfM.h"
 
+using namespace std;
+
 bool OpenSfM::loadParas(std::string dir){
 	std::string line;
 	std::ifstream paraFile(dir);
@@ -35,5 +37,12 @@ bool OpenSfM::loadParas(std::string dir){
 		this -> images.push_back(img);
 	}
 	
+	return 1;
+};
+
+int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
+	cout << "index: " << index << endl;
+	cout << "Zi" << this -> Z_i << endl;
+	cout << "Zj" << this -> Z_j << endl;
 	return 1;
 };
