@@ -446,12 +446,6 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 
 
 
-
-
-
-
-
-
 last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& debug_im ){
 		std::cout << "\n\n\n\nconnected updateStruture!..." << std::endl;
 		/*  STEP 1
@@ -714,7 +708,6 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				cout<<"Table camPose size: "<<(this->cameraPose)->size()<<endl;
 				cout<<"Table camProjTable size: "<<(this->camProjTable)->size()<<endl;
 		}
-
 		/*
 			UPDATE TABLES!!!
 			done
@@ -725,6 +718,9 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 					index_C(i,0) = all_good_matches[i].trainIdx;
 		}
 
+		/*
+				continue when triangulation done
+		*/
 		// multiViewTriangulation(index_C , imC);
 
 
