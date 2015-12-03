@@ -97,7 +97,8 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		}
 
 	  matches.clear();
-
+		printf("-- Max dist : %f \n", max_dist );
+		printf("-- Min dist : %f \n", min_dist );
 
 	  if(!DEBUG) {
 	  	/* code */
@@ -151,7 +152,8 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		 Point3f bottom_horizontal = Point3f(0, 1, -imA.rows);
 		 Point3f right_vertical =    Point3f(1, 0, -imA.cols);
 
-	  	Mat Epilines_show = imB;
+	  	Mat Epilines_show;
+			imB.copyTo(Epilines_show);
 	 	for(int i = 0; i < Epilines.rows; i++){
 	 		Point2f A;
 	 		Point2f B;
@@ -222,20 +224,27 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  //handle featureTable;
 	  int num_of_feature = P1f.size();
 	  this->featureTable = new Mat(num_of_feature,128+3+3,CV_32FC1);
-	  this->featureCell = new vector<arma::umat*>();
+	  this->featureCell = new vector<arma::fmat*>();
 	  this->cameraPose = new vector<arma::fmat*>();
 	  this->camProjTable = new vector<arma::fmat*>();
-	  this->Z_i = new vector<unsigned>(num_of_feature);
-	  iota((this->Z_i)->begin(),(this->Z_i)->end(),0);
-	  this->Z_j = new vector<unsigned>(num_of_feature);
-	  iota((this->Z_j)->begin(),(this->Z_j)->end(),0);
-	  this->Z_v = new vector<unsigned>(num_of_feature,1);
+	  this->Z_i = new vector<unsigned>(num_of_feature*2);
+		std::cout << "num_of_feature: "<< num_of_feature << std::endl;
+		for (size_t i = 0; i < num_of_feature; i++) (*Z_i)[i] = 0;
+		for (size_t i = num_of_feature; i < num_of_feature*2; i++) (*Z_i)[i] = 1;
+
+	  this->Z_j = new vector<unsigned>(num_of_feature*2);
+		for (size_t i = 0; i < num_of_feature; i++) (*Z_j)[i] = i;
+		for (size_t i = num_of_feature; i < num_of_feature*2; i++) (*Z_j)[i] = i-num_of_feature;
+
+	  this->Z_v = new vector<char>(num_of_feature*2,1);
+		for (size_t i = 0; i < num_of_feature*2; i++) (*Z_v)[i] = 1;
 
 
 	  if(DEBUG){
 			cout<<"depth of mask: "<<mask.depth()<<endl;
 			cout<<"# of inliners: "<<NUM<<endl;
 			cout<<"# of all_features: "<<num_of_feature<<endl;
+			cout<<"size of good matches: "<<good_matches.size()<<endl;
 		}
 
 	  for(unsigned i = 0; i < num_of_feature; ++i) {
@@ -245,7 +254,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  		//if(DEBUG) cout<<(this->featureTable)->row(i).colRange(0,2)<<" | "<<descB.row(good_matches[i].trainIdx).colRange(0,2)<<endl;
 
 	  		//2.insert correspounding 2D points to feature cell
-	  		arma::umat* tmp_feature_per_cell = new arma::umat(2,2);
+	  		arma::fmat* tmp_feature_per_cell = new arma::fmat(2,2);
 	  		*tmp_feature_per_cell << P1f[i].x << P1f[i].y << arma::endr << P2f[i].x << P2f[i].y << arma::endr;
 	  		featureCell->push_back(tmp_feature_per_cell);
 		}
@@ -417,6 +426,8 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 			 	descB_candidate.row(i).copyTo((last_f->decs).row(ccnt)); ccnt++;
 			}
 	}
+	// copy pts3D for next PnP
+	point4D[best_index].copyTo(last_f->pts3D);
 	last_f->length = arma::fmat(P1_inliers.size(),1);
 	for (size_t i = 0; i < P1_inliers.size(); i++) {
 		/* compute length */
@@ -432,7 +443,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	}
 
 last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& debug_im ){
-		std::cout << "connected updateStruture!..." << std::endl;
+		std::cout << "\n\n\n\nconnected updateStruture!..." << std::endl;
 		/*  STEP 1
 			Detect SIFT Feature
 		 */
@@ -467,23 +478,24 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 
 		vector< DMatch > good_matches, test_matches;
 	  vector< KeyPoint >P1, P2;
-	  vector< Point2f > P1f, P2f;
-		std::cout << "here!!!!" << std::endl;
+		vector< Point2f >  P2f;
 
 		int cnt = 0;
+		Mat matched_3D_pts(0,3,CV_32FC1);
 		 for( int i = 0; i < matches.size(); i++ ){
-			if( matches[i].distance <= max((this->min_dist)*min_dist, 0.02)){
+			if( matches[i].distance <= max(5*min_dist, 0.02)){
 				good_matches.push_back(matches[i]);
-				test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
+				 test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
 				// std::cout << "/* queryIdx */ " << (last_f->features)[matches[i].queryIdx].pt << std::endl;
-				 P1.push_back( (last_f->features)[matches[i].queryIdx] );
-				 P2.push_back(keypointC[matches[i].trainIdx]);
-				 P1f.push_back((last_f->features)[matches[i].queryIdx].pt);
-				 P2f.push_back(keypointC[matches[i].trainIdx].pt);
+				  P1.push_back( (last_f->features)[matches[i].queryIdx] );
+				  P2.push_back(keypointC[matches[i].trainIdx]);
+				//  P1f.push_back((last_f->features)[matches[i].queryIdx].pt);
+				  P2f.push_back(keypointC[matches[i].trainIdx].pt);
+				 matched_3D_pts.push_back((last_f->pts3D).row(i));
+				 //prepare maatched 3D pts
 			 }
 		 }
 		 std::cout << "done!!!!" << std::endl;
-
 		Mat descC_candidate(good_matches.size(),128,descC.depth());
 	 	for (size_t i = 0; i < good_matches.size(); i++) {
 	 		/* prepare descB_candidate for last_frame */
@@ -500,7 +512,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
                test_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
                vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
  	 	//-- Show detected matches
-  		imshow( "Good Matches", img_matches );
+  		imshow( "Good Matches C", img_matches );
   		cout<<"size of desc A: "<<(last_f->decs).rows<<" | "<<(last_f->decs).cols<<endl;
   		cout<<"size of desc B: "<<descC.rows<<" | "<<descC.cols<<endl;
   		cout<<"size of good matches: "<<good_matches.size()<<endl;
@@ -509,6 +521,173 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 	  P1.clear();
 	  P2.clear();
 	  keypointC.clear();
+		/*
+		Solve PnP
+		*/
+		//transfer intrinsc_K from arma to Mat
+		std::cout << "solve PnP...." << std::endl;
+		std::cout << "matched_3D_pts.rows: "<< matched_3D_pts.rows << std::endl;
+		std::cout << "P2f.size: "<< P2f.size() << std::endl;
+
+		Mat Mat_K(3,3,CV_32FC1, (this->intrinsc_K).memptr());
+		Mat_K = Mat_K.t();
+		Mat rvec, tvec;
+		if (DEBUG) {
+			/* code */
+			//  std::cout << matched_3D_pts << std::endl;
+			//  std::cout << Mat_K << std::endl;
+			// for (size_t i = 0; i < P1f.size(); i++) {
+			// 	/* code */
+			// 	std::cout << "P1f: "<< P1f[i] << std::endl;
+			// }
+		}
+		std::vector<float> v;
+		std::vector<int> PnP_inliners;
+		solvePnPRansac(matched_3D_pts, P2f, Mat_K, v, rvec, tvec, false,100,8.0,100,PnP_inliners);
+		std::cout << "PnP_inliners size: "<< PnP_inliners.size() << std::endl;
+		Mat rot;
+		Rodrigues(rvec,rot);
+		Mat Pose_C(3,4,CV_64FC1); hconcat(rot,tvec,Pose_C);
+		Mat_K.convertTo(Mat_K,CV_64FC1);
+		// std::cout << "Pose_C.depth(): "<< Pose_C.depth() << std::endl;
+		Mat Proj_C; Proj_C = Mat_K*Pose_C;
+		std::cout << "rot: "<< rot << std::endl;
+		std::cout << "tvec: "<< tvec << std::endl;
+	  // std::cout << "Pose_C: "<< Pose_C << std::endl;
+
+		/* IMPORTANT
+			IF CAMPOSE SOLVED BY PNP IS NOT CORRECT OR WE CAN ALSO IMPLEMENT CAMERA POSE
+			FROM F MATRIX, THEN COMPARE RESULTS.
+		*/
+
+		/*
+		fill in big table
+		*/
+
+		matcher.clear();
+		vector< DMatch > all_matches;
+		std::cout << "descC size(): "<< descC.rows<< " | "<<descC.cols << std::endl;
+		Mat subview;
+		((this->featureTable)->colRange(0,128)).copyTo(subview);
+		std::cout << "(this->featureTable)->colRange(0,128) size(): "<< subview.rows<< " | "<<subview.cols << std::endl;
+		/*	IMPORTANT
+			using small descriptor to match big table, and we select the appropriate ones
+		*/
+		matcher.match(  descC, subview , all_matches );
+		subview.release();
+		std::cout << "init all_matches_C size()"<< all_matches.size() << std::endl;
+
+		double all_max_dist = 0; double all_min_dist = 100;
+		for( int i = 0; i < all_matches.size(); i++ ){
+			 double dist = all_matches[i].distance;
+			if( dist < all_min_dist ) all_min_dist = dist;
+			if( dist > all_max_dist ) all_max_dist = dist;
+		}
+
+		vector< DMatch > all_good_matches, all_test_matches;
+		vector< KeyPoint > all_PC;
+		// vector< Point2f > all_P1f, all_P2f;
+		printf("-- Max dist : %f \n", all_max_dist );
+		printf("-- Min dist : %f \n", all_min_dist );
+		// cnt = 0;
+		int update_min_dist_threshold = 5;
+		for (size_t i = 0; i < all_matches.size(); i++) {
+			//this->min_dist is just a factor, usually 3
+			// threshold ????
+					if (all_matches[i].distance <= max(update_min_dist_threshold*min_dist,0.02)) {
+							all_good_matches.push_back(all_matches[i]);
+							all_PC.push_back(keypointC[all_matches[i].queryIdx]);
+							// all_test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
+					}
+		}
+		std::cout << "threshold suppressed all_matches_C & table size:"<< all_good_matches.size() << std::endl;
+
+
+		/* IMPORTANT
+			all_good_matches.queryIdx -> new view
+			all_good_matches.trainIdx -> big table
+		*/
+		/*
+			UPDATE TABLES!!!
+			Z tables
+			feature tables
+			feature Cells
+		*/
+		std::vector<unsigned>* Z_i = (this->Z_i);
+		std::vector<unsigned>* Z_j = (this->Z_j);
+		std::vector<char>* Z_v = (this->Z_v);
+		if (!DEBUG) {
+			/* check Z tabel */
+			for (size_t i = 0; i < Z_i->size(); i++) {
+				std::cout << "Z" + to_string(i) +" "<< (*Z_i)[i] <<" "<<(*Z_j)[i]<<" "<<(*Z_v)[i] << std::endl;
+			}
+		}
+		// assign Z table that has matches
+		std::cout << "featureCell->size(): "<< (this->featureCell)->size() << std::endl;
+		unsigned camID = Z_i->back();
+		for (size_t i = 0; i < all_good_matches.size(); i++) {
+				Z_i->push_back(camID+1);
+				Z_j->push_back(all_good_matches[i].trainIdx);
+				Z_v->push_back(1);
+				//update matched feature desc to nearstest desc
+				descC.row(all_good_matches[i].queryIdx).copyTo(((this->featureTable)->row(all_good_matches[i].trainIdx)).colRange(0,128));
+				//update 			feature Cells that has matched features
+				// Take care of those N to 1 Matches!
+				arma::fmat* cell = (*(this->featureCell))[all_good_matches[i].trainIdx];
+				  // cout<<"size of cell: "<<cell->n_rows<<" | "<< cell->n_cols<<endl;
+				if( cell->n_rows <= camID+1){
+					arma::fmat tmp_new_cell_entry(1,2);
+					tmp_new_cell_entry(0,0) = all_PC[i].pt.x;
+					tmp_new_cell_entry(0,1) = all_PC[i].pt.y;
+					cell->insert_rows(cell->n_rows-1, tmp_new_cell_entry);
+					// std::cout << "insert: "<< all_good_matches[i].trainIdx << std::endl;
+			}
+		}
+
+		if(!DEBUG){
+				for (size_t i = 0; i < (this->featureCell)->size(); i++) {
+					/* check featureCell */
+					std::cout << "featureCell: "<< *(*(this->featureCell))[i] <<"\n"<< std::endl;
+				}
+		}
+
+		// assign Z table that has no match but may match in future frame
+		for (size_t i = 0; i < all_matches.size(); i++) {
+			/* code */
+			if (all_matches[i].distance > max(update_min_dist_threshold*min_dist,0.02)) {
+				Z_i->push_back(camID+1);
+				Z_j->push_back(Z_j->size());
+				Z_v->push_back(1);
+				//add correspounding decs match with new Z entry
+				Mat new_entry(1,(this->featureTable)->cols, CV_32FC1);
+				new_entry.colRange(0,128) = descC.row(i);
+				(*(this->featureTable)).push_back(new_entry);
+				//update feature Cells that has no matched features
+				arma::fmat* tmp_feature_per_cell = new arma::fmat(1,2);
+				*tmp_feature_per_cell << all_PC[i].pt.x << all_PC[i].pt.y;
+				featureCell->push_back(tmp_feature_per_cell);
+			}
+		}
+		if(DEBUG){
+				cout<<"featureTable size: "<<(this->featureTable).rows<<" | "<<(this->featureTable).cols<<endl;
+				cout<<"featureCell size: "<<(this->featureCell)->size()<<endl;
+				cout<<"featureCell size: "<<(this->featureCell)->size()<<endl;
+
+		}
+
+		/*
+			UPDATE TABLES!!!
+		*/
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -28,6 +28,7 @@ struct last_frame{
 			std::vector<cv::KeyPoint> features;
 			cv::Mat decs;
 			arma::fmat length;
+			cv::Mat pts3D;
 };
 
 
@@ -40,12 +41,12 @@ public:
 
 	cv::Mat* featureTable;
 	std::vector<arma::fmat*>* camProjTable;
-	std::vector<arma::umat*>* featureCell; //two dim vecctor
+	std::vector<arma::fmat*>* featureCell; //two dim vecctor
 	std::vector<arma::fmat*>* cameraPose;
 	//Z sparse matrix, when final triangulation, conver to arma & using find to speed up
 	std::vector<unsigned>* Z_i;
 	std::vector<unsigned>* Z_j;
-	std::vector<unsigned>* Z_v;
+	std::vector<char>* Z_v;
 
 bool loadParas(std::string dir);
 /* Yilin Yang
