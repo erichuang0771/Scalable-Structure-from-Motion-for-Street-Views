@@ -400,7 +400,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 
 	 arma::fmat point4D_( reinterpret_cast<float*>(point4D[best_index].data), point4D[best_index].cols, point4D[best_index].rows );
 	 point4D_ = point4D_.t();
-	 point4D_.save("final_pts.mat",arma::raw_ascii);
+	 point4D_.save("openCV_final_pts.mat",arma::raw_ascii);
 	 cout<<"ready BA: "<<point2DA.n_rows<<point2DB.n_rows<<point4D_.n_rows<<endl;
 	//  cout<<"pose: "<<*(*cameraPose)[0]<<"\n pose: "<<*(*cameraPose)[1]<<endl;
 
@@ -428,6 +428,7 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	}
 	// copy pts3D for next PnP
 	point4D[best_index].copyTo(last_f->pts3D);
+
 	last_f->length = arma::fmat(P1_inliers.size(),1);
 	for (size_t i = 0; i < P1_inliers.size(); i++) {
 		/* compute length */
@@ -721,16 +722,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		/*
 				continue when triangulation done
 		*/
-		multiViewTriangulation(index_C , imC);
-
-
-
-
-
-
-
-
-
-
-
+		 multiViewTriangulation(index_C , imC);
+		 arma::fmat featureTable_arma(reinterpret_cast<float*>((*(this->featureTable)).data), 128+6, (*(this->featureTable)).rows);
+		 featureTable_arma.save("own_featureTable.mat",arma::raw_ascii);
 	}

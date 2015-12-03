@@ -45,7 +45,7 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 	vector<arma::fmat*>* featureCell = this -> featureCell;
 	vector<unsigned>* Z_i = this -> Z_i;
 	vector<unsigned>* Z_j = this -> Z_j;
-
+	int camID = Z_i->back();
 	/*cout << "index: " << index << endl;
 	cout << "Zi ";
 	for(int i = 0; i < (*(this -> Z_i)).size(); i++)
@@ -71,14 +71,14 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		int n = Z_index.size();
 		arma::fmat A(2 * n, 4);
 		for(int j = 0; j < Z_index.size(); j++){
-			A(j, 0) = (*(*camProjTable)[Z_index[j]])(2, 0) * pts(0, 0) - (*(*camProjTable)[Z_index[j]])(0, 0);
-			A(j, 1) = (*(*camProjTable)[Z_index[j]])(2, 1) * pts(0, 0) - (*(*camProjTable)[Z_index[j]])(0, 1);
-			A(j, 2) = (*(*camProjTable)[Z_index[j]])(2, 2) * pts(0, 0) - (*(*camProjTable)[Z_index[j]])(0, 2);
-			A(j, 3) = (*(*camProjTable)[Z_index[j]])(2, 3) * pts(0, 0) - (*(*camProjTable)[Z_index[j]])(0, 3);
-			A(n + j, 0) = (*(*camProjTable)[Z_index[j]])(2, 0) * pts(1, 0) - (*(*camProjTable)[Z_index[j]])(1, 0);
-			A(n + j, 1) = (*(*camProjTable)[Z_index[j]])(2, 1) * pts(1, 0) - (*(*camProjTable)[Z_index[j]])(1, 1);
-			A(n + j, 2) = (*(*camProjTable)[Z_index[j]])(2, 2) * pts(1, 0) - (*(*camProjTable)[Z_index[j]])(1, 2);
-			A(n + j, 3) = (*(*camProjTable)[Z_index[j]])(2, 3) * pts(1, 0) - (*(*camProjTable)[Z_index[j]])(1, 3);
+			A(j, 0) = (*(*camProjTable)[Z_index[j]])(2, 0) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 0);
+			A(j, 1) = (*(*camProjTable)[Z_index[j]])(2, 1) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 1);
+			A(j, 2) = (*(*camProjTable)[Z_index[j]])(2, 2) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 2);
+			A(j, 3) = (*(*camProjTable)[Z_index[j]])(2, 3) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 3);
+			A(n + j, 0) = (*(*camProjTable)[Z_index[j]])(2, 0) * pts(j, 1) - (*(*camProjTable)[Z_index[j]])(1, 0);
+			A(n + j, 1) = (*(*camProjTable)[Z_index[j]])(2, 1) * pts(j, 1) - (*(*camProjTable)[Z_index[j]])(1, 1);
+			A(n + j, 2) = (*(*camProjTable)[Z_index[j]])(2, 2) * pts(j, 1) - (*(*camProjTable)[Z_index[j]])(1, 2);
+			A(n + j, 3) = (*(*camProjTable)[Z_index[j]])(2, 3) * pts(j, 1) - (*(*camProjTable)[Z_index[j]])(1, 3);
 		}
 		//std::cout << "A" << A << std::endl;
 
@@ -94,13 +94,13 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		(*(this -> featureTable)).at<float>(idx, 129) = V(1, 3) / V(3, 3);
 		(*(this -> featureTable)).at<float>(idx, 130) = V(2, 3) / V(3, 3);
 		if((*(this -> featureTable)).at<float>(idx, 131) == 0){
-			cv::Vec3b rgb = ims.at<cv::Vec3b>(round(pts(0, 0)), round(pts(1, 0)));
+			cv::Vec3b rgb = ims.at<cv::Vec3b>(round(pts(camID, 1)), round(pts(camID, 0)));
+
 			(*(this -> featureTable)).at<float>(idx, 131) = rgb.val[0];
 			(*(this -> featureTable)).at<float>(idx, 132) = rgb.val[1];
 			(*(this -> featureTable)).at<float>(idx, 133) = rgb.val[2];
 		}
 	}
-
 
 	return 1;
 };
