@@ -568,7 +568,6 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		std::vector<int> PnP_inliners;
 		solvePnPRansac(matched_3D_pts, P2f, Mat_K, v, rvec, tvec, false,100,3.0,100,PnP_inliners);
 		std::cout << "PnP_inliners size: "<< PnP_inliners.size() << std::endl;
-		// std::cout << "rev: " << rvec << std::endl;
 		Mat rot;
 		Rodrigues(rvec,rot);
 		Mat Pose_C(3,4,CV_64FC1); hconcat(rot,tvec,Pose_C);
@@ -674,6 +673,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				std::cout << "Z" + to_string(i) +" "<< (*Z_i)[i] <<" "<<(*Z_j)[i]<<" "<<(*Z_v)[i] << std::endl;
 			}
 		}
+		std::vector<unsigned> Z_j_backup = *Z_j;
 		// assign Z table that has matches
 		std::cout << "featureCell->size(): "<< (this->featureCell)->size() << std::endl;
 		unsigned camID = Z_i->back();
@@ -686,8 +686,9 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				//update 			feature Cells that has matched features
 				// Take care of those N to 1 Matches!
 				arma::fmat* cell = (*(this->featureCell))[all_good_matches[i].trainIdx];
+				int camID_max = std::count (Z_j_backup.begin(), Z_j_backup.end(), all_good_matches[i].trainIdx);
 				  // cout<<"size of cell: "<<cell->n_rows<<" | "<< cell->n_cols<<endl;
-				if( cell->n_rows <= camID+1){
+				if( cell->n_rows < camID_max+1){
 					arma::fmat tmp_new_cell_entry(1,2);
 					tmp_new_cell_entry(0,0) = all_PC[i].pt.x;
 					tmp_new_cell_entry(0,1) = all_PC[i].pt.y;
@@ -775,7 +776,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 			/* handle features */
 			(next_f->features) = all_PC;
 
-			if(DEBUG){
+			if(!DEBUG){
 				/* DEBUG last frame for future */
 				std::cout << "last_frame->all_PC size: "<< all_PC.size() << std::endl;
 				//  std::cout << "all_PC: "<< all_PC << std::endl;
@@ -783,10 +784,10 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				// std::cout << "feature desc" << (next_f->decs) << std::endl;
 			}
 			cout<<"last_frame-> features 2D\n";
-			cout<< (next_f->pts3D)<<endl;
+			// cout<< (next_f->pts3D)<<endl;
 			for (size_t i = 0; i < (next_f->features).size(); i++) {
 				/* code */
-				cout<< (next_f->features)[i].pt <<endl;
+				// cout<< (next_f->features)[i].pt <<endl;
 			}
 			delete last_f;
 			return next_f;
