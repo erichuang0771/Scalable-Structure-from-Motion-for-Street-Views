@@ -69,6 +69,10 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		// get the matrix for SVD decomposition
 		int n = Z_index.size();
 		arma::fmat A(2 * n, 4);
+		if(pts.n_rows != Z_index.size()){
+			std::cout << "error" << std::endl;
+			std::cout << "idx" << pts.n_rows << "|" << Z_index.size() << "|" << idx << std::endl;
+		}
 		for(int j = 0; j < Z_index.size(); j++){
 			// std::cout << "Z_index" << Z_index[j] << std::endl;
 			A(j, 0) = (*(*camProjTable)[Z_index[j]])(2, 0) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 0);

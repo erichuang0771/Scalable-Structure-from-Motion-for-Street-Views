@@ -568,6 +568,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		std::vector<int> PnP_inliners;
 		solvePnPRansac(matched_3D_pts, P2f, Mat_K, v, rvec, tvec, false,100,8.0,100,PnP_inliners);
 		std::cout << "PnP_inliners size: "<< PnP_inliners.size() << std::endl;
+		std::cout << "rod" << rvec << '|' <<tvec << std::endl;
 		Mat rot;
 		Rodrigues(rvec,rot);
 		Mat Pose_C(3,4,CV_64FC1); hconcat(rot,tvec,Pose_C);
