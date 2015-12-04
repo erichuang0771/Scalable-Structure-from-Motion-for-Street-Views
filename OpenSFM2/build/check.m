@@ -1,3 +1,4 @@
+clear all; close all;
 N = 2;
 p = zeros(3,4,N);
 p(:,:,1) = load(['camProjTable', num2str(0), '.mat'],'-ascii');

@@ -566,8 +566,9 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		}
 		std::vector<float> v;
 		std::vector<int> PnP_inliners;
-		solvePnPRansac(matched_3D_pts, P2f, Mat_K, v, rvec, tvec, false,100,8.0,100,PnP_inliners);
+		solvePnPRansac(matched_3D_pts, P2f, Mat_K, v, rvec, tvec, false,100,3.0,100,PnP_inliners);
 		std::cout << "PnP_inliners size: "<< PnP_inliners.size() << std::endl;
+		// std::cout << "rev: " << rvec << std::endl;
 		Mat rot;
 		Rodrigues(rvec,rot);
 		Mat Pose_C(3,4,CV_64FC1); hconcat(rot,tvec,Pose_C);
@@ -579,7 +580,6 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		(this->cameraPose)->push_back(new_pose_C_f);
 
 
-
 		//  std::cout << "Pose_C.depth(): "<< Pose_C.depth() << std::endl;
 		Mat Proj_C; Proj_C = Mat_K*Pose_C;
 		std::cout << "rot: "<< rot << std::endl;
@@ -589,6 +589,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		 arma::fmat* new_proj_C_f = new arma::fmat(3,4);
 		 *new_proj_C_f = arma::conv_to<arma::fmat>::from(new_proj_C);
 		 (this->camProjTable)->push_back(new_proj_C_f);
+		 std::cout << "PnP: solved proj: "<< Proj_C << std::endl;
 		//  new_proj_C_f->save("camProjM"+to_string(i)+".mat",arma::raw_ascii);
 
 		/*UPDATE
@@ -767,9 +768,9 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 			last_frame* next_f = new last_frame;
 			for (size_t i = 0; i < all_good_matches.size(); i++) {
 				/* handle desc */
-				(next_f->decs).push_back(descC.row(all_good_matches[i].queryIdx));
+				(next_f->decs).push_back( (*(this->featureTable)).row(all_good_matches[i].trainIdx).colRange(0,128)  );
 				/* handle 3d pts */
-				(next_f->pts3D).push_back(  (*(this->featureTable)).row(index_C[i]).colRange(128,131));
+				(next_f->pts3D).push_back(  (*(this->featureTable)).row(all_good_matches[i].trainIdx).colRange(128,131));
 			}
 			/* handle features */
 			(next_f->features) = all_PC;
@@ -781,12 +782,12 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				std::cout << "last_frame->features size: "<< (next_f->features).size() << std::endl;
 				// std::cout << "feature desc" << (next_f->decs) << std::endl;
 			}
-
 			cout<<"last_frame-> features 2D\n";
-			// for (size_t i = 0; i < (next_f->features).size(); i++) {
-			// 	/* code */
-			// 	cout<< (next_f->features)[i].pt <<endl;
-			// }
+			cout<< (next_f->pts3D)<<endl;
+			for (size_t i = 0; i < (next_f->features).size(); i++) {
+				/* code */
+				cout<< (next_f->features)[i].pt <<endl;
+			}
 			delete last_f;
 			return next_f;
 	}
