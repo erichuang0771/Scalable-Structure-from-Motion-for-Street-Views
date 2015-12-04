@@ -753,6 +753,8 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		 /*
 		 		Debug pose extimations
 		 */
+
+
 		 for (size_t i = 0; i < (this->camProjTable)->size(); i++) {
 		 	/* code */
 			(*(this->camProjTable))[i]->save("camProjTable"+ to_string(i) +".mat",arma::raw_ascii);
