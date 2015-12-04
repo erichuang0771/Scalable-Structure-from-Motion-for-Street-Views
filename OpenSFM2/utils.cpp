@@ -45,32 +45,32 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 	vector<arma::fmat*>* featureCell = this -> featureCell;
 	vector<unsigned>* Z_i = this -> Z_i;
 	vector<unsigned>* Z_j = this -> Z_j;
-	int camID = Z_i->back();
-	/*cout << "index: " << index << endl;
+	cout << "index: " << index << endl;
 	cout << "Zi ";
 	for(int i = 0; i < (*(this -> Z_i)).size(); i++)
 		cout << (*(this -> Z_i))[i] << ' ';
 	cout << "\nZj ";
 	for(int i = 0; i < (*(this -> Z_j)).size(); i++)
-		cout << (*(this -> Z_j))[i] << ' ';*/
+		cout << (*(this -> Z_j))[i] << ' ';
 
 	int index_num = index.n_rows;
 	for(int i = 0; i < index_num; i++){
 		int idx = index(i, 0);
 		// 2D point in camera idx
 		arma::fmat pts = *(*featureCell)[idx];
-		//std::cout << "featureCell" << pts << std::endl;
+		 std::cout << "featureCell" << pts << std::endl;
 
 		// get all the (Z_i, Z_j, Z_v) from camera idx
 		vector<int> Z_index;
 		for(int j = 0; j < (*Z_j).size(); j++)
-			if((*Z_j)[j] == idx && (j == 0 || (*Z_j)[j - 1] != (*Z_j)[j]))
+			if((*Z_j)[j] == idx && (Z_index.empty() || (*Z_i)[j] != Z_index.back()))
 				Z_index.push_back((*Z_i)[j]);
 
 		// get the matrix for SVD decomposition
 		int n = Z_index.size();
 		arma::fmat A(2 * n, 4);
 		for(int j = 0; j < Z_index.size(); j++){
+			std::cout << "Z_index" << Z_index[j] << std::endl;
 			A(j, 0) = (*(*camProjTable)[Z_index[j]])(2, 0) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 0);
 			A(j, 1) = (*(*camProjTable)[Z_index[j]])(2, 1) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 1);
 			A(j, 2) = (*(*camProjTable)[Z_index[j]])(2, 2) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 2);
@@ -80,7 +80,7 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 			A(n + j, 2) = (*(*camProjTable)[Z_index[j]])(2, 2) * pts(j, 1) - (*(*camProjTable)[Z_index[j]])(1, 2);
 			A(n + j, 3) = (*(*camProjTable)[Z_index[j]])(2, 3) * pts(j, 1) - (*(*camProjTable)[Z_index[j]])(1, 3);
 		}
-		//std::cout << "A" << A << std::endl;
+	 //std::cout << "A" << A << std::endl;
 
 		// SVD decomposition
 		arma::fmat U;
@@ -90,17 +90,24 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		//std::cout << "V" << V.col(3) << std::endl;
 
 		// update feature table
+		// std::cout << "INDEX: "<< idx << std::endl;
+		// std::cout << "featureTable size(): "<< featureTable->size() << std::endl;
+		// std::cout << "V"<< V << std::endl;
 		(*(this -> featureTable)).at<float>(idx, 128) = V(0, 3) / V(3, 3);
 		(*(this -> featureTable)).at<float>(idx, 129) = V(1, 3) / V(3, 3);
 		(*(this -> featureTable)).at<float>(idx, 130) = V(2, 3) / V(3, 3);
+		//  cout<<"hehehehehe\n";
 		if((*(this -> featureTable)).at<float>(idx, 131) == 0){
-			cv::Vec3b rgb = ims.at<cv::Vec3b>(round(pts(camID, 1)), round(pts(camID, 0)));
+			int camID = pts.n_rows - 1;
+			std::cout << "camID: "<<camID << std::endl;
+		  std::cout << "check: "<< round(pts(camID, 1)) <<" | "<< round(pts(camID, 0))  << std::endl;
 
+			cv::Vec3b rgb = ims.at<cv::Vec3b>(round(pts(camID, 1)), round(pts(camID, 0)));
 			(*(this -> featureTable)).at<float>(idx, 131) = rgb.val[0];
 			(*(this -> featureTable)).at<float>(idx, 132) = rgb.val[1];
 			(*(this -> featureTable)).at<float>(idx, 133) = rgb.val[2];
 		}
 	}
-
+	 cout<<"#####\n";
 	return 1;
 };

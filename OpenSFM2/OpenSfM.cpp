@@ -20,7 +20,12 @@ int OpenSfM::run(){
 			waitKey(0);
 	}
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-	last_frame* next_f = updateStruture(images[2],last_f, imgB);
+for (size_t i = 2; i < 4; i++) {
+	/* code */
+	last_frame* next_f = updateStruture(images[i],last_f, images[i-1]);
+	last_f = next_f;
+}
+
 	return 0;
 }
 
@@ -434,6 +439,19 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		/* compute length */
 		(last_f->length).row(i) = sqrt(point4D_(i,0)*point4D_(i,0) + point4D_(i,1)*point4D_(i,1) + point4D_(i,2)*point4D_(i,2));
 	}
+
+	/*
+			frame 1 triangulation
+	*/
+	arma::umat index_B(num_of_feature,1);
+	for (size_t i = 0; i < num_of_feature; i++) {
+				index_B(i,0) = i;
+	}
+
+	multiViewTriangulation(index_B , imB);
+	arma::fmat featureTable_arma(reinterpret_cast<float*>((*(this->featureTable)).data), 128+6, (*(this->featureTable)).rows);
+	featureTable_arma.save("featureTable_0.mat",arma::raw_ascii);
+
 	cout<<"initalTwoViewRecon done\n";
 	if(!DEBUG){
 		// cout<<"last_f->features: \n"<<last_f->features<<endl;
@@ -614,7 +632,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		printf("-- Max dist : %f \n", all_max_dist );
 		printf("-- Min dist : %f \n", all_min_dist );
 		// cnt = 0;
-		int update_min_dist_threshold = 5;
+		int update_min_dist_threshold = 3;
 		for (size_t i = 0; i < all_matches.size(); i++) {
 			//this->min_dist is just a factor, usually 3
 			// threshold ????
@@ -671,7 +689,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 					arma::fmat tmp_new_cell_entry(1,2);
 					tmp_new_cell_entry(0,0) = all_PC[i].pt.x;
 					tmp_new_cell_entry(0,1) = all_PC[i].pt.y;
-					cell->insert_rows(cell->n_rows-1, tmp_new_cell_entry);
+					cell->insert_rows(cell->n_rows, tmp_new_cell_entry);
 					// std::cout << "insert: "<< all_good_matches[i].trainIdx << std::endl;
 			}
 		}
@@ -691,12 +709,14 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				Z_j->push_back(Z_j->size());
 				Z_v->push_back(1);
 				//add correspounding decs match with new Z entry
-				Mat new_entry(1,(this->featureTable)->cols, CV_32FC1);
-				new_entry.colRange(0,128) = descC.row(i);
+				Mat new_entry = Mat::zeros(1,(this->featureTable)->cols, CV_32FC1);
+				descC.row(all_matches[i].queryIdx).copyTo(new_entry.colRange(0,128));
 				(*(this->featureTable)).push_back(new_entry);
 				//update feature Cells that has no matched features
 				arma::fmat* tmp_feature_per_cell = new arma::fmat(1,2);
-				*tmp_feature_per_cell << all_PC[i].pt.x << all_PC[i].pt.y;
+				(*tmp_feature_per_cell)(0,0) = keypointC[all_matches[i].queryIdx].pt.x;
+				(*tmp_feature_per_cell)(0,1) = keypointC[all_matches[i].queryIdx].pt.y;
+				// std::cout << "I add new feature: "<< *tmp_feature_per_cell << std::endl;
 				featureCell->push_back(tmp_feature_per_cell);
 			}
 		}
@@ -718,11 +738,46 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		for (size_t i = 0; i < all_good_matches.size(); i++) {
 					index_C(i,0) = all_good_matches[i].trainIdx;
 		}
-
 		/*
-				continue when triangulation done
+			triangulation
 		*/
+		std::cout << "triangulation begin!" << std::endl;
 		 multiViewTriangulation(index_C , imC);
+		 std::cout << "triangulation end!" << std::endl;
+
 		 arma::fmat featureTable_arma(reinterpret_cast<float*>((*(this->featureTable)).data), 128+6, (*(this->featureTable)).rows);
-		 featureTable_arma.save("own_featureTable.mat",arma::raw_ascii);
+		 static int debug_cnt = 0;
+		 featureTable_arma.save("featureTable_"+to_string(++debug_cnt)+".mat",arma::raw_ascii);
+		 std::cout << "index_C, which is used to update size()"<< index_C.size() << std::endl;
+		 /*
+		 		Debug pose extimations
+		 */
+		 for (size_t i = 0; i < (this->camProjTable)->size(); i++) {
+		 	/* code */
+			(*(this->camProjTable))[i]->save("camProjTable"+ to_string(i) +".mat",arma::raw_ascii);
+		 }
+		 std::cout << "saved camProjTable" << std::endl;
+
+		 /*
+		 	Handle last frame
+			*/
+			last_frame* next_f = new last_frame;
+			for (size_t i = 0; i < all_good_matches.size(); i++) {
+				/* handle desc */
+				(next_f->decs).push_back(descC.row(all_good_matches[i].queryIdx));
+				/* handle 3d pts */
+				(next_f->pts3D).push_back(  (*(this->featureTable)).row(index_C[i]).colRange(128,131));
+			}
+			/* handle features */
+			(next_f->features) = all_PC;
+
+			if(DEBUG){
+				/* DEBUG last frame for future */
+				std::cout << "last_frame->all_PC size: "<< all_PC.size() << std::endl;
+				//  std::cout << "all_PC: "<< all_PC << std::endl;
+				std::cout << "last_frame->features size: "<< (next_f->features).size() << std::endl;
+				// std::cout << "feature desc" << (next_f->decs) << std::endl;
+			}
+			delete last_f;
+			return next_f;
 	}
