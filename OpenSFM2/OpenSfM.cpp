@@ -589,6 +589,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		 arma::fmat* new_proj_C_f = new arma::fmat(3,4);
 		 *new_proj_C_f = arma::conv_to<arma::fmat>::from(new_proj_C);
 		 (this->camProjTable)->push_back(new_proj_C_f);
+		//  new_proj_C_f->save("camProjM"+to_string(i)+".mat",arma::raw_ascii);
 
 		/*UPDATE
 		Projection & Pose table
@@ -777,6 +778,12 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				//  std::cout << "all_PC: "<< all_PC << std::endl;
 				std::cout << "last_frame->features size: "<< (next_f->features).size() << std::endl;
 				// std::cout << "feature desc" << (next_f->decs) << std::endl;
+			}
+
+			cout<<"last_frame-> features 2D\n";
+			for (size_t i = 0; i < (next_f->features).size(); i++) {
+				/* code */
+				cout<< (next_f->features)[i].pt <<endl;
 			}
 			delete last_f;
 			return next_f;

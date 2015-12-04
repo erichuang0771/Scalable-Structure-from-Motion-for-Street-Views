@@ -45,20 +45,20 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 	vector<arma::fmat*>* featureCell = this -> featureCell;
 	vector<unsigned>* Z_i = this -> Z_i;
 	vector<unsigned>* Z_j = this -> Z_j;
-	cout << "index: " << index << endl;
-	cout << "Zi ";
-	for(int i = 0; i < (*(this -> Z_i)).size(); i++)
-		cout << (*(this -> Z_i))[i] << ' ';
-	cout << "\nZj ";
-	for(int i = 0; i < (*(this -> Z_j)).size(); i++)
-		cout << (*(this -> Z_j))[i] << ' ';
+	// cout << "index: " << index << endl;
+	// cout << "Zi ";
+	// for(int i = 0; i < (*(this -> Z_i)).size(); i++)
+	// 	cout << (*(this -> Z_i))[i] << ' ';
+	// // cout << "\nZj ";
+	// for(int i = 0; i < (*(this -> Z_j)).size(); i++)
+	// 	cout << (*(this -> Z_j))[i] << ' ';
 
 	int index_num = index.n_rows;
 	for(int i = 0; i < index_num; i++){
 		int idx = index(i, 0);
 		// 2D point in camera idx
 		arma::fmat pts = *(*featureCell)[idx];
-		 std::cout << "featureCell" << pts << std::endl;
+		//  std::cout << "featureCell" << pts << std::endl;
 
 		// get all the (Z_i, Z_j, Z_v) from camera idx
 		vector<int> Z_index;
@@ -70,7 +70,7 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		int n = Z_index.size();
 		arma::fmat A(2 * n, 4);
 		for(int j = 0; j < Z_index.size(); j++){
-			std::cout << "Z_index" << Z_index[j] << std::endl;
+			// std::cout << "Z_index" << Z_index[j] << std::endl;
 			A(j, 0) = (*(*camProjTable)[Z_index[j]])(2, 0) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 0);
 			A(j, 1) = (*(*camProjTable)[Z_index[j]])(2, 1) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 1);
 			A(j, 2) = (*(*camProjTable)[Z_index[j]])(2, 2) * pts(j, 0) - (*(*camProjTable)[Z_index[j]])(0, 2);
@@ -99,8 +99,8 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		//  cout<<"hehehehehe\n";
 		if((*(this -> featureTable)).at<float>(idx, 131) == 0){
 			int camID = pts.n_rows - 1;
-			std::cout << "camID: "<<camID << std::endl;
-		  std::cout << "check: "<< round(pts(camID, 1)) <<" | "<< round(pts(camID, 0))  << std::endl;
+			// std::cout << "camID: "<<camID << std::endl;
+		  // std::cout << "check: "<< round(pts(camID, 1)) <<" | "<< round(pts(camID, 0))  << std::endl;
 
 			cv::Vec3b rgb = ims.at<cv::Vec3b>(round(pts(camID, 1)), round(pts(camID, 0)));
 			(*(this -> featureTable)).at<float>(idx, 131) = rgb.val[0];
@@ -108,6 +108,6 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 			(*(this -> featureTable)).at<float>(idx, 133) = rgb.val[2];
 		}
 	}
-	 cout<<"#####\n";
+	//  cout<<"#####\n";
 	return 1;
 };
