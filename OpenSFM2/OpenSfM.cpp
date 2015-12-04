@@ -783,10 +783,10 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 			}
 
 			cout<<"last_frame-> features 2D\n";
-			for (size_t i = 0; i < (next_f->features).size(); i++) {
-				/* code */
-				cout<< (next_f->features)[i].pt <<endl;
-			}
+			// for (size_t i = 0; i < (next_f->features).size(); i++) {
+			// 	/* code */
+			// 	cout<< (next_f->features)[i].pt <<endl;
+			// }
 			delete last_f;
 			return next_f;
 	}
