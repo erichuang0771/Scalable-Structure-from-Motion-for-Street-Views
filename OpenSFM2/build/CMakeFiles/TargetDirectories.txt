@@ -1,1 +1,0 @@
-/home/eric/Documents/OpenSLAM/OpenSFM2/build/CMakeFiles/OpenSfM.dir
