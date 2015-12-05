@@ -1,7 +1,7 @@
 ply
 format ascii 1.0
 comment PCL generated
-element vertex 4
+element vertex 5
 property float x
 property float y
 property float z
@@ -34,5 +34,6 @@ end_header
 0 0 0 128 128 0
 0.032606 0.99236 -0.11899 128 128 0
 0.26419 1.5711 0.093039 128 128 0
-0.056669 2.4286 -0.16207 200 0 0
-0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 4 1 0 0
+0.36279 2.1654 0.22707 128 128 0
+0.43014 2.698 0.37634 200 0 0
+0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 5 1 0 0

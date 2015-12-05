@@ -20,7 +20,7 @@ int OpenSfM::run(){
 			waitKey(0);
 	}
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-for (size_t i = 2; i < 4; i++) {
+for (size_t i = 2; i < 5; i++) {
 	/* code */
 	last_frame* next_f = updateStruture(images[i],last_f, images[i-1]);
 	last_f = next_f;
@@ -553,7 +553,11 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		std::cout << "P2f.size: "<< P2f.size() << std::endl;
 
 		Mat Mat_K(3,3,CV_32FC1, (this->intrinsc_K).memptr());
-		Mat_K = Mat_K.t();
+		Mat K_tmp;
+		Mat_K.copyTo(K_tmp);
+		std::cout << "K_tmp: " << K_tmp <<endl;
+
+		K_tmp = K_tmp.t();
 		Mat rvec, tvec;
 		if (DEBUG) {
 			/* code */
@@ -566,21 +570,22 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		}
 		std::vector<float> v;
 		std::vector<int> PnP_inliners;
-		solvePnPRansac(matched_3D_pts, P2f, Mat_K, v, rvec, tvec, false,100,3.0,100,PnP_inliners);
+		solvePnPRansac(matched_3D_pts, P2f, K_tmp, v, rvec, tvec, false,100,3.0,100,PnP_inliners);
 		std::cout << "PnP_inliners size: "<< PnP_inliners.size() << std::endl;
 		Mat rot;
 		Rodrigues(rvec,rot);
 		Mat Pose_C(3,4,CV_64FC1); hconcat(rot,tvec,Pose_C);
-		Mat_K.convertTo(Mat_K,CV_64FC1);
+		K_tmp.convertTo(K_tmp,CV_64FC1);
 		arma::mat new_pose_C(reinterpret_cast<double*>(Pose_C.data), 4, 3);
 		new_pose_C = new_pose_C.t();
 		arma::fmat* new_pose_C_f = new arma::fmat(3,4);
 		*new_pose_C_f = arma::conv_to<arma::fmat>::from(new_pose_C);
 		(this->cameraPose)->push_back(new_pose_C_f);
-
+		cout<<"cameraPose: "<<Pose_C<<endl;
 
 		//  std::cout << "Pose_C.depth(): "<< Pose_C.depth() << std::endl;
-		Mat Proj_C; Proj_C = Mat_K*Pose_C;
+		// cout<<"mat_K: "<<Mat_K<<endl;
+		Mat Proj_C; Proj_C = K_tmp*Pose_C;
 		std::cout << "rot: "<< rot << std::endl;
 		std::cout << "tvec: "<< tvec << std::endl;
 		 arma::mat new_proj_C(reinterpret_cast<double*>(Proj_C.data), 4, 3);
@@ -588,7 +593,10 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		 arma::fmat* new_proj_C_f = new arma::fmat(3,4);
 		 *new_proj_C_f = arma::conv_to<arma::fmat>::from(new_proj_C);
 		 (this->camProjTable)->push_back(new_proj_C_f);
+		 std::cout << "intrinsc_K: " << (this->intrinsc_K) <<endl;
 		 std::cout << "PnP: solved proj: "<< Proj_C << std::endl;
+		 std::cout << "PnP: invsoled pose: "<< K_tmp .inv()*Proj_C << std::endl;
+
 		//  new_proj_C_f->save("camProjM"+to_string(i)+".mat",arma::raw_ascii);
 
 		/*UPDATE
@@ -757,10 +765,9 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		 */
 
 
-		 for (size_t i = 0; i < (this->camProjTable)->size(); i++) {
-		 	/* code */
-			(*(this->camProjTable))[i]->save("camProjTable"+ to_string(i) +".mat",arma::raw_ascii);
-		 }
+
+			(*(this->camProjTable)).back()->save("camProjTable"+ to_string((*(this->camProjTable)).size()-1) +".mat",arma::raw_ascii);
+
 		 std::cout << "saved camProjTable" << std::endl;
 
 		 /*
