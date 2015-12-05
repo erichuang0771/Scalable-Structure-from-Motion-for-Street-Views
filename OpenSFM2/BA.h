@@ -47,8 +47,8 @@ struct SnavelyReprojectionError {
     // The error is the difference between the predicted and observed position.
     residuals[0] = predicted_x - T(observed_x);
     residuals[1] = predicted_y - T(observed_y);
-		std::cout<<"error 0: "<<residuals[0]<<std::endl;
-		std::cout<<"error 1: "<<residuals[1]<<std::endl;
+		// std::cout<<"error 0: "<<residuals[0]<<std::endl;
+		// std::cout<<"error 1: "<<residuals[1]<<std::endl;
 
     return true;
   }

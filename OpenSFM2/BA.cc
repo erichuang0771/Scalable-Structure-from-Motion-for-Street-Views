@@ -184,7 +184,8 @@ for (size_t i = 0; i < point4D.n_rows; i++) {
   point4D(i,1) = point4D_BA[i*3+1];
   point4D(i,2) = point4D_BA[i*3+2];
 }
-point4D.save("BA_now.mat",arma::raw_ascii);
+static int ba_cnt = 0;
+point4D.save("BA_"+to_string(ba_cnt)+".mat",arma::raw_ascii);
 
   return 0;
 }

@@ -20,7 +20,7 @@ int OpenSfM::run(){
 			waitKey(0);
 	}
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-for (size_t i = 2; i < 5; i++) {
+for (size_t i = 2; i < 2; i++) {
 	/* code */
 	last_frame* next_f = updateStruture(images[i],last_f, images[i-1]);
 	last_f = next_f;
@@ -410,12 +410,14 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	//  cout<<"pose: "<<*(*cameraPose)[0]<<"\n pose: "<<*(*cameraPose)[1]<<endl;
 
 
-	//  local_bundle_adjustment( intrinsc_K,
-  //                           *(*cameraPose)[0],
-  //                           *(*cameraPose)[1],
-  //                           point2DA,
-  //                           point2DB,
-  //                           point4D_);
+	std::cout << "bundle_adjustment start!" << std::endl;
+	 local_bundle_adjustment( intrinsc_K,
+                            *(*cameraPose)[0],
+                            *(*cameraPose)[1],
+                            point2DA,
+                            point2DB,
+                            point4D_);
+		std::cout << "bundle_adjustment done!" << std::endl;
 	/*
 			handle last frame
 	*/
