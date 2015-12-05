@@ -1,5 +1,5 @@
 clear all; close all;
-N = 8;
+N = 16;
 p = zeros(3,4,N);
 p(:,:,1) = load(['camProjTable', num2str(0), '.mat'],'-ascii');
 for i = 0 : N

@@ -21,7 +21,7 @@ int OpenSfM::run(){
 			waitKey(0);
 	}
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-for (size_t i = 2; i < 10; i++) {
+for (size_t i = 2; i < 18; i++) {
 	/* code */
 	last_frame* next_f = updateStruture(images[i],last_f, images[i-1]);
 	last_f = next_f;

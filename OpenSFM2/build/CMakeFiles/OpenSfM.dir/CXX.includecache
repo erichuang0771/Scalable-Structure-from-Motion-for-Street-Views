@@ -124,6 +124,10 @@ armadillo
 numeric
 -
 
+/home/eric/Documents/OpenSLAM/OpenSFM2/utils.cpp
+OpenSfM.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/OpenSfM.h
+
 /usr/local/include/ceres/autodiff_cost_function.h
 ceres/internal/autodiff.h
 /usr/local/include/ceres/ceres/internal/autodiff.h
