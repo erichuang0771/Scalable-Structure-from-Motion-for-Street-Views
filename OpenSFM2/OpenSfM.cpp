@@ -20,7 +20,7 @@ int OpenSfM::run(){
 			waitKey(0);
 	}
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-for (size_t i = 2; i < 2; i++) {
+for (size_t i = 2; i < 5; i++) {
 	/* code */
 	last_frame* next_f = updateStruture(images[i],last_f, images[i-1]);
 	last_f = next_f;
@@ -130,11 +130,24 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	  	and check Epolier line
 	   */
 	  Mat mask;
-	  Mat fundamental_matrix_ = findFundamentalMat(P1f, P2f, FM_LMEDS, 0.1, 0.99, mask);
-		arma::fmat hehehe; hehehe.load("FFF.mat",arma::raw_ascii);
-		Mat fundamental_matrix( 3, 3, CV_32FC1, hehehe.memptr() );
-		fundamental_matrix.convertTo(fundamental_matrix,CV_64FC1);
-		fundamental_matrix = fundamental_matrix.t();
+	  std::vector<Point2f> P1f_norm = P1f, P2f_norm = P2f;
+		//std::cout << "rowcol" << this -> img_rows << "|" << this -> img_cols << std::endl;
+		for(int i = 0; i < P1f.size(); i++){
+			P1f_norm[i].x = P1f_norm[i].x / (this -> img_cols);
+			P1f_norm[i].y = P1f_norm[i].y / (this -> img_rows);
+			P2f_norm[i].x = P2f_norm[i].x / (this -> img_cols);
+			P2f_norm[i].y = P2f_norm[i].y / (this -> img_rows);
+		}
+		Mat scale = Mat::zeros(3, 3, CV_64FC1);
+		scale.at<double>(0, 0) = 1.0 / (this -> img_cols);
+		scale.at<double>(1, 1) = 1.0 / (this -> img_rows);
+		scale.at<double>(2, 2) = 1.0;
+	  Mat fundamental_matrix = findFundamentalMat(P1f_norm, P2f_norm, FM_RANSAC, 0.001, 0.99, mask);
+		fundamental_matrix = scale * fundamental_matrix * scale;
+		//arma::fmat hehehe; hehehe.load("FFF.mat",arma::raw_ascii);
+		//Mat fundamental_matrix( 3, 3, CV_32FC1, hehehe.memptr() );
+		//fundamental_matrix.convertTo(fundamental_matrix,CV_64FC1);
+		//fundamental_matrix = fundamental_matrix.t();
 		cout<<"**********************\n"<<fundamental_matrix<<"*********************\n";
 
 
@@ -421,7 +434,6 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	/*
 			handle last frame
 	*/
-
 	last_frame* last_f = new last_frame;
 	last_f->features = P1in;
 	last_f->decs = Mat(P1_inliers.size(),128,descB_candidate.depth());
@@ -441,7 +453,6 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		/* compute length */
 		(last_f->length).row(i) = sqrt(point4D_(i,0)*point4D_(i,0) + point4D_(i,1)*point4D_(i,1) + point4D_(i,2)*point4D_(i,2));
 	}
-
 	/*
 			frame 1 triangulation
 	*/
@@ -462,6 +473,8 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	}
 	return last_f;
 	}
+
+
 
 
 
@@ -574,6 +587,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		std::vector<int> PnP_inliners;
 		solvePnPRansac(matched_3D_pts, P2f, K_tmp, v, rvec, tvec, false,100,3.0,100,PnP_inliners);
 		std::cout << "PnP_inliners size: "<< PnP_inliners.size() << std::endl;
+
 		Mat rot;
 		Rodrigues(rvec,rot);
 		Mat Pose_C(3,4,CV_64FC1); hconcat(rot,tvec,Pose_C);
@@ -598,6 +612,47 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		 std::cout << "intrinsc_K: " << (this->intrinsc_K) <<endl;
 		 std::cout << "PnP: solved proj: "<< Proj_C << std::endl;
 		 std::cout << "PnP: invsoled pose: "<< K_tmp .inv()*Proj_C << std::endl;
+
+		 /*
+		 Bundle Adustment Starts
+		 */
+		 /*
+		 prepare BA:
+		 */
+		 std::cout << "BA check size: "<< PnP_inliners.size() << std::endl;
+		 arma::fmat point4D_tmp( reinterpret_cast<float*>((matched_3D_pts).data), (matched_3D_pts).cols, (matched_3D_pts).rows );
+		 point4D_tmp = point4D_tmp.t();
+		 arma::fmat point4D_(PnP_inliners.size(),3);
+		 for (size_t i = 0; i < PnP_inliners.size(); i++) {
+			 /* code */
+				 point4D_.row(i) = point4D_tmp.row(PnP_inliners[i]);
+		 }
+
+
+		arma::fmat point2DA( PnP_inliners.size() , 2 );
+		arma::fmat point2DB( PnP_inliners.size() , 2 );
+	 //  std::cout << "" << std::endl;
+		for(unsigned i = 0; i < PnP_inliners.size(); ++i) {
+		 /* code */
+		 point2DA.at(i,0) = P1[ PnP_inliners[i] ].pt.x;
+		 point2DA.at(i,1) = P1[ PnP_inliners[i] ].pt.y;
+		 point2DB.at(i,0) = P2[ PnP_inliners[i] ].pt.x;
+		 point2DB.at(i,1) = P2[ PnP_inliners[i] ].pt.y;
+	 }
+		 int camNum = (*cameraPose).size();
+			std::cout << "bundle_adjustment start!" << std::endl;
+			std::cout << "intrinsc_K BA: " << intrinsc_K <<  std::endl;
+			 local_bundle_adjustment( intrinsc_K,
+																 *(*cameraPose)[camNum-2],
+																 *(*cameraPose)[camNum-1],
+																 point2DA,
+																 point2DB,
+																 point4D_);
+				std::cout << "bundle_adjustment done!" << std::endl;
+				/*
+			 Bundle Adustment Ends
+			 */
+
 
 		//  new_proj_C_f->save("camProjM"+to_string(i)+".mat",arma::raw_ascii);
 
@@ -638,7 +693,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		}
 
 		vector< DMatch > all_good_matches, all_test_matches;
-		vector< KeyPoint > all_PC;
+		vector< KeyPoint > all_PC, all_last;
 		// vector< Point2f > all_P1f, all_P2f;
 		printf("-- Max dist : %f \n", all_max_dist );
 		printf("-- Min dist : %f \n", all_min_dist );
@@ -650,6 +705,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 					if (all_matches[i].distance <= max(update_min_dist_threshold*min_dist,0.02)) {
 							all_good_matches.push_back(all_matches[i]);
 							all_PC.push_back(keypointC[all_matches[i].queryIdx]);
+							all_last.push_back((last_f->features)[all_matches[i].trainIdx]);
 							// all_test_matches.push_back(DMatch(cnt,cnt,1.0)); cnt++;
 					}
 		}
@@ -782,6 +838,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				/* handle 3d pts */
 				(next_f->pts3D).push_back(  (*(this->featureTable)).row(all_good_matches[i].trainIdx).colRange(128,131));
 			}
+
 			/* handle features */
 			(next_f->features) = all_PC;
 

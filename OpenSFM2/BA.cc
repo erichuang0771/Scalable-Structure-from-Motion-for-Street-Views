@@ -37,14 +37,7 @@
 #include "BA.h"
 
 // Read a Bundle Adjustment in the Large dataset.
-//
-//
-//
-//
-//
-//
-//
-//
+
 using namespace std;
 
 int local_bundle_adjustment(arma::fmat K,
@@ -155,13 +148,15 @@ int local_bundle_adjustment(arma::fmat K,
             arma::mat T_1(reinterpret_cast<double*>(&camParameters_A[3]),3,1);
             arma::mat T_2(reinterpret_cast<double*>(&camParameters_B[3]),3,1);
             R_1 = arma::join_rows(R_1,T_1);
-            R_1.save("cam_1.mat",arma::raw_ascii);
+            R_1 = K*R_1;
+            R_1.save("BA_camProj_1.mat",arma::raw_ascii);
 
             double* RR2 = new double[9];
             ceres::AngleAxisToRotationMatrix<double>(camParameters_B,RR2);
             arma::mat R_2(reinterpret_cast<double*>(RR2),3,3);
             R_2 = arma::join_rows(R_2,T_2);
-            R_2.save("cam_2.mat",arma::raw_ascii);
+            R_2 = K*R_2;
+            R_2.save("BA_camProj_2.mat",arma::raw_ascii);
 
 for(unsigned i = 0; i < 6; ++i) {
   /* code */
@@ -177,17 +172,19 @@ for(unsigned i = 0; i < 6; ++i) {
  // cout<<"camB: "<<camParameters_B[i]<<endl;
 }
 cout<<"\n\n";
-cout<<"K: "<<K(0,2)<<" | "<<K(1,2)<<endl;
+// cout<<"K: "<<K(0,2)<<" | "<<K(1,2)<<endl;
 for (size_t i = 0; i < point4D.n_rows; i++) {
   /* code */
   point4D(i,0) = point4D_BA[i*3+0];
   point4D(i,1) = point4D_BA[i*3+1];
   point4D(i,2) = point4D_BA[i*3+2];
 }
-static int ba_cnt = 0;
-point4D.save("BA_"+to_string(ba_cnt)+".mat",arma::raw_ascii);
+//save BA pose:
 
-  return 0;
+static int ba_cnt = 0;
+point4D.save("BA_"+to_string(ba_cnt)+".mat",arma::raw_ascii);ba_cnt++;
+std::cout << "\n saved BA results \n" << std::endl;
+return 0;
 }
 
 

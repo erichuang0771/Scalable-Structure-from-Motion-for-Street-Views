@@ -13,9 +13,5 @@ for i = 0 : N
 end
 
 save_Cam_Pos(p);
-
-
-
-
 disp('done~')
 

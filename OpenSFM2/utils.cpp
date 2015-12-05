@@ -36,7 +36,8 @@ bool OpenSfM::loadParas(std::string dir){
 		cv::Mat img = cv::imread(line + ss.str() + ".png",  CV_LOAD_IMAGE_COLOR);
 		this -> images.push_back(img);
 	}
-
+	this -> img_rows = (this -> images[0]).rows;
+	this -> img_cols = (this -> images[0]).cols;
 	return 1;
 };
 

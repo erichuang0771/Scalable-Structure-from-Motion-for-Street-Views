@@ -38,7 +38,7 @@ public:
 	arma::fmat intrinsc_K;
 	int min_dist;
 	std::vector<cv::Mat> images;
-
+  int img_rows, img_cols;
 	cv::Mat* featureTable;
 	std::vector<arma::fmat*>* camProjTable;
 	std::vector<arma::fmat*>* featureCell; //two dim vecctor
