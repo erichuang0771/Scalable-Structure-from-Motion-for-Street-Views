@@ -401,36 +401,36 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 		 	*/
 	  	  this->cameraPose->push_back(pose_B);
 
-				/*
-					prepare BA
-				*/
-
-	 arma::fmat point2DA( P1_inliers.size() , 2 );
-	 arma::fmat point2DB( P1_inliers.size() , 2 );
-
-	 for(unsigned i = 0; i < P1_inliers.size(); ++i) {
-	 	/* code */
-	 	point2DA.at(i,0) = P1_inliers[i].x;
-	 	point2DA.at(i,1) = P1_inliers[i].y;
-	 	point2DB.at(i,0) = P2_inliers[i].x;
-	 	point2DB.at(i,1) = P2_inliers[i].y;
-	}
-
-	 arma::fmat point4D_( reinterpret_cast<float*>(point4D[best_index].data), point4D[best_index].cols, point4D[best_index].rows );
-	 point4D_ = point4D_.t();
-	 point4D_.save("openCV_final_pts.mat",arma::raw_ascii);
-	 cout<<"ready BA: "<<point2DA.n_rows<<point2DB.n_rows<<point4D_.n_rows<<endl;
-	//  cout<<"pose: "<<*(*cameraPose)[0]<<"\n pose: "<<*(*cameraPose)[1]<<endl;
-
-
-	std::cout << "bundle_adjustment start!" << std::endl;
-	 local_bundle_adjustment( intrinsc_K,
-                            *(*cameraPose)[0],
-                            *(*cameraPose)[1],
-                            point2DA,
-                            point2DB,
-                            point4D_);
-		std::cout << "bundle_adjustment done!" << std::endl;
+	// 			/*
+	// 				prepare BA
+	// 			*/
+	//
+	//  arma::fmat point2DA( P1_inliers.size() , 2 );
+	//  arma::fmat point2DB( P1_inliers.size() , 2 );
+	//
+	//  for(unsigned i = 0; i < P1_inliers.size(); ++i) {
+	//  	/* code */
+	//  	point2DA.at(i,0) = P1_inliers[i].x;
+	//  	point2DA.at(i,1) = P1_inliers[i].y;
+	//  	point2DB.at(i,0) = P2_inliers[i].x;
+	//  	point2DB.at(i,1) = P2_inliers[i].y;
+	// }
+	//
+	  arma::fmat point4D_( reinterpret_cast<float*>(point4D[best_index].data), point4D[best_index].cols, point4D[best_index].rows );
+	  point4D_ = point4D_.t();
+	//  point4D_.save("openCV_final_pts.mat",arma::raw_ascii);
+	//  cout<<"ready BA: "<<point2DA.n_rows<<point2DB.n_rows<<point4D_.n_rows<<endl;
+	// //  cout<<"pose: "<<*(*cameraPose)[0]<<"\n pose: "<<*(*cameraPose)[1]<<endl;
+	//
+	//
+	// std::cout << "bundle_adjustment start!" << std::endl;
+	//  local_bundle_adjustment( intrinsc_K,
+  //                           *(*cameraPose)[0],
+  //                           *(*cameraPose)[1],
+  //                           point2DA,
+  //                           point2DB,
+  //                           point4D_);
+	// 	std::cout << "bundle_adjustment done!" << std::endl;
 	/*
 			handle last frame
 	*/
@@ -616,39 +616,39 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		 /*
 		 Bundle Adustment Starts
 		 */
-		 /*
-		 prepare BA:
-		 */
-		 std::cout << "BA check size: "<< PnP_inliners.size() << std::endl;
-		 arma::fmat point4D_tmp( reinterpret_cast<float*>((matched_3D_pts).data), (matched_3D_pts).cols, (matched_3D_pts).rows );
-		 point4D_tmp = point4D_tmp.t();
-		 arma::fmat point4D_(PnP_inliners.size(),3);
-		 for (size_t i = 0; i < PnP_inliners.size(); i++) {
-			 /* code */
-				 point4D_.row(i) = point4D_tmp.row(PnP_inliners[i]);
-		 }
-
-
-		arma::fmat point2DA( PnP_inliners.size() , 2 );
-		arma::fmat point2DB( PnP_inliners.size() , 2 );
-	 //  std::cout << "" << std::endl;
-		for(unsigned i = 0; i < PnP_inliners.size(); ++i) {
-		 /* code */
-		 point2DA.at(i,0) = P1[ PnP_inliners[i] ].pt.x;
-		 point2DA.at(i,1) = P1[ PnP_inliners[i] ].pt.y;
-		 point2DB.at(i,0) = P2[ PnP_inliners[i] ].pt.x;
-		 point2DB.at(i,1) = P2[ PnP_inliners[i] ].pt.y;
-	 }
-		 int camNum = (*cameraPose).size();
-			std::cout << "bundle_adjustment start!" << std::endl;
-			std::cout << "intrinsc_K BA: " << intrinsc_K <<  std::endl;
-			 local_bundle_adjustment( intrinsc_K,
-																 *(*cameraPose)[camNum-2],
-																 *(*cameraPose)[camNum-1],
-																 point2DA,
-																 point2DB,
-																 point4D_);
-				std::cout << "bundle_adjustment done!" << std::endl;
+	// 	 /*
+	// 	 prepare BA:
+	// 	 */
+	// 	 std::cout << "BA check size: "<< PnP_inliners.size() << std::endl;
+	// 	 arma::fmat point4D_tmp( reinterpret_cast<float*>((matched_3D_pts).data), (matched_3D_pts).cols, (matched_3D_pts).rows );
+	// 	 point4D_tmp = point4D_tmp.t();
+	// 	 arma::fmat point4D_(PnP_inliners.size(),3);
+	// 	 for (size_t i = 0; i < PnP_inliners.size(); i++) {
+	// 		 /* code */
+	// 			 point4D_.row(i) = point4D_tmp.row(PnP_inliners[i]);
+	// 	 }
+	 //
+	 //
+	// 	arma::fmat point2DA( PnP_inliners.size() , 2 );
+	// 	arma::fmat point2DB( PnP_inliners.size() , 2 );
+	//  //  std::cout << "" << std::endl;
+	// 	for(unsigned i = 0; i < PnP_inliners.size(); ++i) {
+	// 	 /* code */
+	// 	 point2DA.at(i,0) = P1[ PnP_inliners[i] ].pt.x;
+	// 	 point2DA.at(i,1) = P1[ PnP_inliners[i] ].pt.y;
+	// 	 point2DB.at(i,0) = P2[ PnP_inliners[i] ].pt.x;
+	// 	 point2DB.at(i,1) = P2[ PnP_inliners[i] ].pt.y;
+	//  }
+	// 	 int camNum = (*cameraPose).size();
+	// 		std::cout << "bundle_adjustment start!" << std::endl;
+	// 		std::cout << "intrinsc_K BA: " << intrinsc_K <<  std::endl;
+	// 		 local_bundle_adjustment( intrinsc_K,
+	// 															 *(*cameraPose)[camNum-2],
+	// 															 *(*cameraPose)[camNum-1],
+	// 															 point2DA,
+	// 															 point2DB,
+	// 															 point4D_);
+	// 			std::cout << "bundle_adjustment done!" << std::endl;
 				/*
 			 Bundle Adustment Ends
 			 */
