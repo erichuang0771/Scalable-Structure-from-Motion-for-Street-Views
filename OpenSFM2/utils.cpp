@@ -115,9 +115,9 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		  // std::cout << "check: "<< round(pts(camID, 1)) <<" | "<< round(pts(camID, 0))  << std::endl;
 
 			cv::Vec3b rgb = ims.at<cv::Vec3b>(round(pts(camID, 1)), round(pts(camID, 0)));
-			(*(this -> featureTable)).at<float>(idx, 131) = rgb.val[0];
+			(*(this -> featureTable)).at<float>(idx, 131) = rgb.val[2];
 			(*(this -> featureTable)).at<float>(idx, 132) = rgb.val[1];
-			(*(this -> featureTable)).at<float>(idx, 133) = rgb.val[2];
+			(*(this -> featureTable)).at<float>(idx, 133) = rgb.val[0];
 		}
 	}
 	//  cout<<"#####\n";
