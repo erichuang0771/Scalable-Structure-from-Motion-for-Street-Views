@@ -1,3 +1,4 @@
+
 #include "OpenSfM.h"
 #include "GeometryFunctions.h"
 #include "BA.h"
@@ -423,7 +424,8 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	// //  cout<<"pose: "<<*(*cameraPose)[0]<<"\n pose: "<<*(*cameraPose)[1]<<endl;
 	//
 	//
-	// std::cout << "bundle_adjustment start!" << std::endl;
+
+
 	//  local_bundle_adjustment( intrinsc_K,
   //                           *(*cameraPose)[0],
   //                           *(*cameraPose)[1],
@@ -465,6 +467,13 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	arma::fmat featureTable_arma(reinterpret_cast<float*>((*(this->featureTable)).data), 128+6, (*(this->featureTable)).rows);
 	featureTable_arma.save("featureTable_0.mat",arma::raw_ascii);
 
+	std::cout << "bundle_adjustment start!" << std::endl;
+	 BALProblem bal_problem;
+	 bal_problem.LoadBA(this);
+	 bal_problem.runBA();
+	 bal_problem.saveBA(this);
+
+
 	cout<<"initalTwoViewRecon done\n";
 	if(!DEBUG){
 		// cout<<"last_f->features: \n"<<last_f->features<<endl;
@@ -473,11 +482,6 @@ last_frame* OpenSfM::initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB){
 	}
 	return last_f;
 	}
-
-
-
-
-
 
 
 last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& debug_im ){
@@ -813,6 +817,14 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		std::cout << "triangulation begin!" << std::endl;
 		 multiViewTriangulation(index_C , imC);
 		 std::cout << "triangulation end!" << std::endl;
+
+		 std::cout << "bundle_adjustment start!" << std::endl;
+	 	 BALProblem bal_problem;
+	 	 bal_problem.LoadBA(this);
+		 std::cout << "done this" << std::endl;
+	 	 bal_problem.runBA();
+		 bal_problem.saveBA(this);
+
 
 		 arma::fmat featureTable_arma(reinterpret_cast<float*>((*(this->featureTable)).data), 128+6, (*(this->featureTable)).rows);
 		 static int debug_cnt = 0;

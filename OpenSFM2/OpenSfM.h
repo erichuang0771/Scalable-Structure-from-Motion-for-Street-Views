@@ -1,3 +1,7 @@
+
+#ifndef OPENSFM
+#define OPENSFM
+
 #include <stdio.h>
 #include <iostream>
 #include "opencv2/core/core.hpp"
@@ -90,3 +94,4 @@ last_frame* initalTwoViewRecon(cv::Mat& imA, cv::Mat& imB);
  */
 
 };
+#endif

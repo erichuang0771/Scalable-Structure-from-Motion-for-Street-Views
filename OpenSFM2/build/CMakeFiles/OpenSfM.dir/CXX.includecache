@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/eric/Documents/OpenSLAM/OpenSFM2/BA.cc
+BA.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/BA.h
+
 /home/eric/Documents/OpenSLAM/OpenSFM2/BA.h
 cmath
 -
@@ -17,8 +21,12 @@ ceres/ceres.h
 /home/eric/Documents/OpenSLAM/OpenSFM2/ceres/ceres.h
 ceres/rotation.h
 /home/eric/Documents/OpenSLAM/OpenSFM2/ceres/rotation.h
+ceres/loss_function.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/ceres/loss_function.h
 armadillo
 -
+OpenSfM.h
+/home/eric/Documents/OpenSLAM/OpenSFM2/OpenSfM.h
 
 /home/eric/Documents/OpenSLAM/OpenSFM2/GeometryFunctions.h
 stdio.h

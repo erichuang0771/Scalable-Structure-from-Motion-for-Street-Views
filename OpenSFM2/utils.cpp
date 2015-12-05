@@ -62,7 +62,7 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		//  std::cout << "featureCell" << pts << std::endl;
 
 		// get all the (Z_i, Z_j, Z_v) from camera idx
-		vector<int> Z_index;
+		vector<unsigned> Z_index;
 		for(int j = 0; j < (*Z_j).size(); j++)
 			if((*Z_j)[j] == idx && (Z_index.empty() || (*Z_i)[j] != Z_index.back()))
 				Z_index.push_back((*Z_i)[j]);
