@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/eric/Documents/OpenSLAM/OpenSFM2/BA.cc
-BA.h
-/home/eric/Documents/OpenSLAM/OpenSFM2/BA.h
-
 /home/eric/Documents/OpenSLAM/OpenSFM2/BA.h
 cmath
 -

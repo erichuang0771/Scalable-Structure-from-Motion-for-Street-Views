@@ -21,7 +21,7 @@ int OpenSfM::run(){
 			waitKey(0);
 	}
 	last_frame* last_f = initalTwoViewRecon(imgA, imgB);
-for (size_t i = 2; i < 5; i++) {
+for (size_t i = 2; i < 10; i++) {
 	/* code */
 	last_frame* next_f = updateStruture(images[i],last_f, images[i-1]);
 	last_f = next_f;
@@ -702,7 +702,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 		printf("-- Max dist : %f \n", all_max_dist );
 		printf("-- Min dist : %f \n", all_min_dist );
 		// cnt = 0;
-		int update_min_dist_threshold = 3;
+		int update_min_dist_threshold = 5;
 		for (size_t i = 0; i < all_matches.size(); i++) {
 			//this->min_dist is just a factor, usually 3
 			// threshold ????
@@ -743,11 +743,19 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				std::cout << "Z" + to_string(i) +" "<< (*Z_i)[i] <<" "<<(*Z_j)[i]<<" "<<(*Z_v)[i] << std::endl;
 			}
 		}
-		std::vector<unsigned> Z_j_backup = *Z_j;
+		std::vector<unsigned> featureCell_backup((this->featureCell)->size(),0);
+		for (size_t i = 0; i < (this->featureCell)->size(); i++) {
+			/* code */
+			featureCell_backup[i] = (*(this->featureCell))[i]->n_rows;
+		}
 		// assign Z table that has matches
 		std::cout << "featureCell->size(): "<< (this->featureCell)->size() << std::endl;
 		unsigned camID = Z_i->back();
 		for (size_t i = 0; i < all_good_matches.size(); i++) {
+
+			arma::fmat* cell = (*(this->featureCell))[all_good_matches[i].trainIdx];
+			int camID_max = featureCell_backup[all_good_matches[i].trainIdx];
+			if( cell->n_rows < camID_max+1){
 				Z_i->push_back(camID+1);
 				Z_j->push_back(all_good_matches[i].trainIdx);
 				Z_v->push_back(1);
@@ -755,15 +763,10 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 				descC.row(all_good_matches[i].queryIdx).copyTo(((this->featureTable)->row(all_good_matches[i].trainIdx)).colRange(0,128));
 				//update 			feature Cells that has matched features
 				// Take care of those N to 1 Matches!
-				arma::fmat* cell = (*(this->featureCell))[all_good_matches[i].trainIdx];
-				int camID_max = std::count (Z_j_backup.begin(), Z_j_backup.end(), all_good_matches[i].trainIdx);
-				  // cout<<"size of cell: "<<cell->n_rows<<" | "<< cell->n_cols<<endl;
-				if( cell->n_rows < camID_max+1){
 					arma::fmat tmp_new_cell_entry(1,2);
 					tmp_new_cell_entry(0,0) = all_PC[i].pt.x;
 					tmp_new_cell_entry(0,1) = all_PC[i].pt.y;
 					cell->insert_rows(cell->n_rows, tmp_new_cell_entry);
-					// std::cout << "insert: "<< all_good_matches[i].trainIdx << std::endl;
 			}
 		}
 
@@ -779,7 +782,7 @@ last_frame* OpenSfM::updateStruture(cv::Mat& imC, last_frame* last_f, cv::Mat& d
 			/* code */
 			if (all_matches[i].distance > max(update_min_dist_threshold*min_dist,0.02)) {
 				Z_i->push_back(camID+1);
-				Z_j->push_back(Z_j->size());
+				Z_j->push_back((this->featureCell)->size());
 				Z_v->push_back(1);
 				//add correspounding decs match with new Z entry
 				Mat new_entry = Mat::zeros(1,(this->featureTable)->cols, CV_32FC1);

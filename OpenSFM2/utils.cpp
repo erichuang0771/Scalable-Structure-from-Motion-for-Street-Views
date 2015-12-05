@@ -30,7 +30,7 @@ bool OpenSfM::loadParas(std::string dir){
 	getline(paraFile, line, ' ');
 	int img_num = std::stoi(line);
 	getline(paraFile, line);
-	for(int i = 1; i <= img_num; i++){
+	for(int i = 13; i <= 31; i++){
 		std::stringstream ss;
 		ss << std::setw(2) << std::setfill('0') << i;
 		cv::Mat img = cv::imread(line + ss.str() + ".png",  CV_LOAD_IMAGE_COLOR);
@@ -47,12 +47,12 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 	vector<unsigned>* Z_i = this -> Z_i;
 	vector<unsigned>* Z_j = this -> Z_j;
 	// cout << "index: " << index << endl;
-	// cout << "Zi ";
-	// for(int i = 0; i < (*(this -> Z_i)).size(); i++)
-	// 	cout << (*(this -> Z_i))[i] << ' ';
-	// // cout << "\nZj ";
-	// for(int i = 0; i < (*(this -> Z_j)).size(); i++)
-	// 	cout << (*(this -> Z_j))[i] << ' ';
+	//  cout << "Zi ";
+	//  for(int i = 0; i < (*(this -> Z_i)).size(); i++)
+	//  	cout << (*(this -> Z_i))[i] << ' ';
+	//   cout << "\nZj ";
+	//  for(int i = 0; i < (*(this -> Z_j)).size(); i++)
+	//  	cout << (*(this -> Z_j))[i] << ' ';
 
 	int index_num = index.n_rows;
 	for(int i = 0; i < index_num; i++){
@@ -63,16 +63,23 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 
 		// get all the (Z_i, Z_j, Z_v) from camera idx
 		vector<unsigned> Z_index;
-		for(int j = 0; j < (*Z_j).size(); j++)
+		for(int j = 0; j < (*Z_j).size(); j++){
+			//cout << "Zj: " << (*Z_i)[j] << "|" << (*Z_j)[j] << endl;
 			if((*Z_j)[j] == idx && (Z_index.empty() || (*Z_i)[j] != Z_index.back()))
 				Z_index.push_back((*Z_i)[j]);
+			}
 
 		// get the matrix for SVD decomposition
 		int n = Z_index.size();
 		arma::fmat A(2 * n, 4);
 		if(pts.n_rows != Z_index.size()){
 			std::cout << "error" << std::endl;
-			std::cout << "idx" << pts.n_rows << "|" << Z_index.size() << "|" << idx << std::endl;
+			std::cout << "idx: " << pts.n_rows << "|" << Z_index.size() << "|" << idx << std::endl;
+			std::cout << "pts" << pts << std::endl;
+			vector<unsigned> Z_index_;
+			for(int j = 0; j < (*Z_j).size(); j++)
+				if((*Z_j)[j] == idx)
+					cout << "Zj: " << (*Z_i)[j] << "|" << (*Z_j)[j] << endl;
 		}
 		for(int j = 0; j < Z_index.size(); j++){
 			// std::cout << "Z_index" << Z_index[j] << std::endl;
