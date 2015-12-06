@@ -38,11 +38,10 @@ struct SnavelyReprojectionError {
 				T xp =  p[0] / p[2];
 				T yp =  p[1] / p[2];
 				// Compute final projected point position.
-				const T& focal = T(1520.4);
-				const T& dx = T(319.5);
-				const T& dy = T(239.5);
-				T predicted_x = T(693.8246970471848) * xp + dx;
-				T predicted_y = T(693.8246970471848) * yp + dy;
+				const T& dx = T(313.1147);
+				const T& dy = T(243.1272);
+				T predicted_x = T(703.3804) * xp + dx;
+				T predicted_y = T(700.2222) * yp + dy;
 				// The error is the difference between the predicted and observed position.
 				residuals[0] = predicted_x - T(observed_x);
 				residuals[1] = predicted_y - T(observed_y);

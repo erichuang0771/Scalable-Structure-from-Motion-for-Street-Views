@@ -30,10 +30,10 @@ bool OpenSfM::loadParas(std::string dir){
 	getline(paraFile, line, ' ');
 	int img_num = std::stoi(line);
 	getline(paraFile, line);
-	for(int i = 5; i <= img_num; i++){
+	for(int i = 5	; i <= img_num; i++){
 		std::stringstream ss;
 		ss << /*std::setw(2) << std::setfill('0') <<*/ i;
-		cv::Mat img = cv::imread(line + ss.str() + ".bmp",  CV_LOAD_IMAGE_COLOR);
+		cv::Mat img = cv::imread(line + ss.str() + ".png",  CV_LOAD_IMAGE_COLOR);
 		this -> images.push_back(img);
 	}
 	this -> img_rows = (this -> images[0]).rows;
@@ -115,9 +115,10 @@ int OpenSfM::multiViewTriangulation(arma::umat& index , cv::Mat& ims){
 		  // std::cout << "check: "<< round(pts(camID, 1)) <<" | "<< round(pts(camID, 0))  << std::endl;
 
 			cv::Vec3b rgb = ims.at<cv::Vec3b>(round(pts(camID, 1)), round(pts(camID, 0)));
-			(*(this -> featureTable)).at<float>(idx, 131) = rgb.val[2];
-			(*(this -> featureTable)).at<float>(idx, 132) = rgb.val[1];
-			(*(this -> featureTable)).at<float>(idx, 133) = rgb.val[0];
+			// std::cout << "rgb: "<< rgb << std::endl;
+			(*(this -> featureTable)).at<float>(idx, 131) = int(rgb.val[2]);
+			(*(this -> featureTable)).at<float>(idx, 132) = int(rgb.val[1]);
+			(*(this -> featureTable)).at<float>(idx, 133) = int(rgb.val[0]);
 		}
 	}
 	//  cout<<"#####\n";

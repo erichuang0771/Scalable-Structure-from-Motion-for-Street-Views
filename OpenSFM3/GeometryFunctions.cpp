@@ -105,7 +105,7 @@ bool DecomposeEtoRandT(cv::Mat& E, arma::fmat& R1, arma::fmat& R2, arma::fmat& t
 
 
 bool checkRotationMatrix(arma::fmat& R){
-	if(fabsf(det(R) - 1.0) > 1e-07){
+	if(fabsf(det(R) - 1.0) > 1e-04){
 		cerr<<"det(R) != +- 1.0, not valid rotation matrix: "<<det(R)<<endl;
 		return false;
 	}

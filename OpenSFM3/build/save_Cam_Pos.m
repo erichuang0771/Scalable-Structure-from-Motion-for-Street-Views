@@ -8,6 +8,8 @@ function [] = save_Cam_Pos(camProjTable)
         camera_center(i,:) = [(-inv(R)*T)', [128,128,0]];
     end
       camera_center(end,4:6) = [200,0,0];
+      camera_center(1,4:6) = [0,200,0];
+
     save_ply('Cams.ply',camera_center);
 end
 
