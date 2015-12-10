@@ -3,3 +3,18 @@ README
 OpenSLAM
 Eric Huang
 Yilin Yang
+
+Library Requires:
+  Armadillo
+  OpenCV
+  Ceres
+
+How to compile:
+  
+  cd ./openSfM3/build/
+  
+  cmake ..
+  
+  sh build.sh
+
+
