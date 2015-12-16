@@ -5,6 +5,9 @@ Scalable Structure-from-Motion for Street Views
 Eric Huang
 Yilin Yang
 
+Impelemntation Details:
+  Check ./poster.pdf
+
 Library Requires:
   Armadillo
   OpenCV
