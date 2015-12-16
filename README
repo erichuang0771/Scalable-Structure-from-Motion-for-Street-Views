@@ -12,13 +12,15 @@ Library Requires:
 
 How to compile:
   
-  cd ./openSfM2/build/
+  cd ./openSFM2/build/
+  
+  cd ./openSFM3/build/
   
   cmake ..
   
   sh build.sh
 
 Updates:
-  OpenSfM2 runs at temple dataset now
-  OpenSfM3 more robust and run on real dataset but not ready yet, will be update soon.
+  OpenSfM2 runs at temple dataset
+  OpenSfM3 more robust and run on real dataset
 
