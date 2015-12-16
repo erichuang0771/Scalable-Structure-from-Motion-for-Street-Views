@@ -19,6 +19,12 @@ How to compile:
   cmake ..
   
   sh build.sh
+  
+Run:
+  Press any key to move to next frame
+  
+Get results:
+  Run Matlab file: check.m to generate .ply file for any frame
 
 Updates:
   OpenSfM2 runs at temple dataset
