@@ -30,7 +30,7 @@ bool OpenSfM::loadParas(std::string dir){
 	getline(paraFile, line, ' ');
 	int img_num = std::stoi(line);
 	getline(paraFile, line);
-	for(int i = 5	; i <= img_num; i++){
+	for(int i = 1	; i <= img_num; i++){
 		std::stringstream ss;
 		ss << /*std::setw(2) << std::setfill('0') <<*/ i;
 		cv::Mat img = cv::imread(line + ss.str() + ".png",  CV_LOAD_IMAGE_COLOR);
