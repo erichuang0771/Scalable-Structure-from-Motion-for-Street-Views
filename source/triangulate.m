@@ -20,8 +20,8 @@ error = zeros(size(p1,1),1);
        % y = y/y(3);
         error(i) = norm(x - [p1(i,:), 1]',2)+norm(y - [p2(i,:),1]',2);
     end
-    p_2 = inv(K)*M2*padarray(p_,[0,1],1,'post')';
-    orient = sum(p_(:,3)>0) + sum(p_2(:,3)'>0);
+    p_2 = (inv(K)*M2)*padarray(p_,[0,1],1,'post')';
+    orient = sum(p_(:,3)>0) + sum(p_2(3,:)'>0);
     error = sum(error);
     P = p_;
 end

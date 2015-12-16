@@ -37,7 +37,7 @@ function [ featureTable, camProjTable, featureCell,Z, last_feature, last_desc, l
     %% using F and assume we have K instrinsc M
      load K.mat 
      E = K'*FFF*K;
-    % displayEpipolarF(debug_im, ims, FFF);
+    %  displayEpipolarF(debug_im, ims, FFF);
     %E = five_pts_solver(last_feature(1:2,matches_F(1,:))',f(1:2,matches_F(2,:))',K);
      [M2s] = camera2(E);
 %     error()

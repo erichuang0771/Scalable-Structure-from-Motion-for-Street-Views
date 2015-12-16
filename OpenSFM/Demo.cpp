@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
   // int file_name_counter = atoi(argv[2]);
 
   // std::string render_dir = argv[1];
-  
+
   // DIR* render_DIR;
   // if ((render_DIR = opendir(render_dir.c_str())) == NULL) {
   //   printf("Problem opening directory: %s\n", render_dir.c_str());
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 	//waitKey(0);
    tester->run();
    return 0;
-   
+
 
 
   // struct dirent* file;
