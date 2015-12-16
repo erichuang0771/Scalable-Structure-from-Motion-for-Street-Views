@@ -1,5 +1,24 @@
 README
 
-OpenSLAM
+Scalable Structure-from-Motion for Street Views
+
 Eric Huang
 Yilin Yang
+
+Library Requires:
+  Armadillo
+  OpenCV
+  Ceres
+
+How to compile:
+  
+  cd ./openSfM2/build/
+  
+  cmake ..
+  
+  sh build.sh
+
+Updates:
+  OpenSfM2 runs at temple dataset now
+  OpenSfM3 more robust and run on real dataset but not ready yet, will be update soon.
+
